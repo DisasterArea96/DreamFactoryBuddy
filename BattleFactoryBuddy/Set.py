@@ -75,7 +75,7 @@ class Set:
             return False
         if self.roundInfo == "A":
             if otherpkmn.roundInfo not in ["A"]:
-            return False
+                return False
         elif self.roundInfo == "B":
             if otherpkmn.roundIinfo not in ["B","C"]:
                 return False
