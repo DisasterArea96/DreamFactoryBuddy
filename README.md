@@ -10,7 +10,7 @@ Check out this <a href="https://youtu.be/kMAyGfeFTOw?si=pB4kvKfc3yH6U0Py">video 
 ## Quick Start - First time setup for running on your own PC.
 * Download this repository as a ZIP file (click the Green Code button) and extract it somewhere on your PC.
 * If you don't already have python. Go to <a href="https://www.python.org/downloads/">python.org<a> and download the latest version of python and install it (you'll probably want the Windows-64 bit installer when given a big list of things to download).
-* Open file explorer and double click on setup. It should run for a few minutes and is done when you see `Starting development server`.
+* Open file explorer and double click on setup. It should run for a few minutes and is done when you see `Starting development server`. If you don't see that (likely a black window flashes up and closes) then try running setuppython instead, which does the same thing in a slightly different way.
 * Open your browser and `http://127.0.0.1:8000/`, you should see the main battle factory page.
 * Close the Command prompt window when you're done.
  
