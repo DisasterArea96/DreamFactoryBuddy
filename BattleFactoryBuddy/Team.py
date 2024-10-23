@@ -22,13 +22,13 @@ class Team:
             stylepoints += set.moves
         
         counter = Counter(stylepoints)
-        t1 = 1 if (counter["1"] > 2) else 0
+        t1 = 1 if (counter["1"] > 1) else 0
         t2 = 1 if (counter["2"] > 2) else 0
         t3 = 1 if (counter["3"] > 2) else 0
-        t4 = 1 if (counter["4"] > 1) else 0
+        t4 = 1 if (counter["4"] > 2) else 0
         t5 = 1 if (counter["5"] > 1) else 0
         t6 = 1 if (counter["6"] > 1) else 0
-        t7 = 1 if (counter["7"] > 1) else 0
+        t7 = 1 if (counter["7"] > 2) else 0
 
         if (t1 + t2 + t3 + t4 + t5 + t6 + t7) > 2:
             self.style = 8
@@ -70,12 +70,21 @@ class Team:
                     self.type = "None"
 
     # Work out which "round" this team can appear in. This isn't 1-1 with rounds in the game but more like buckets.
+
     # 1 = l50 round 4 / OL round 1
     # 2 = l50 round 5 / OL round 2
     # 3 = l50 round 6 / OL round 3
     # 4 = l50 round 7 / OL round 4
     # 5 = l50 round 8+
     # 6 = OL round 5+
+
+    # A = l50 round 1-3
+    # B = l50 round 4-6
+    # C = l50 round 4+ / OL round 1-3
+    # D = l50 round 7+ / OL (all)
+    # E = OL round 4+
+    # F = OL round 7+
+
     # ALTSETS - Edits required if your sets maps to rounds in different ways.
     def initCalculateRound(self):
         roundmarkers = []
