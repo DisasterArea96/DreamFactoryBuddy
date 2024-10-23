@@ -62,26 +62,33 @@ class SetCalcHandler:
 
         # ALTSETS - if you have different rules on which teams are in which rounds then change it here.
 
-        # A = l50 round 1-3
-        # B = l50 round 4-6
-        # C = l50 round 4+ / OL round 1-3
-        # D = l50 round 7+ / OL (all)
-        # E = OL round 4+
-        # F = OL round 7+
+        # 1 - All As
+        # 2 - Has B
+        # 3 - All Cs
+        # 4 - CD
+        # 5 - All Ds
+        # 6 - DE
+        # 7 - Has F
 
-        if (level == "50" and round == "8") or (level == "100" and int(round) > 4):
-            teamSetList += ["5"]
-            if level == "100":
-                teamSetList += ["6"]
-            teamSetList += ["4", "3", "2", "1"]
-        elif (level == "50" and round == "7") or (level == "100" and round == "4"):
-            teamSetList += ["4"]
-        elif (level == "50" and round == "6") or (level == "100" and round == "3"):
-            teamSetList += ["3"]
-        elif (level == "50" and round == "5") or (level == "100" and round == "2"):
-            teamSetList += ["2"]
-        elif (level == "50" and round == "4") or (level == "100" and round == "1"):
-            teamSetList += ["1"]
+        # Then l50:
+        # r1-4 = [1]
+        # r4-6 = [2,3]
+        # r7+ = [3,4,5]
+        # OL:
+        # r1-3 =[3,4,5]
+        # r4-6=[5,6]
+        # r7+ = [5,6,7]
+
+        if level == "50" and int(round) < 4:
+            teamSetList = ["1"]
+        elif level == "50" and round in ["4","5","6"]:
+            teamSetList = ["2","3"]
+        elif (level == "50" and int(round) > 6) or (level == "100" and int(round) < 4):
+            teamSetList = ["3","4","5"]
+        elif level == "100" and round in ["4","5","6"]:
+            teamSetList = ["5","6"]
+        elif level == "100" and int(round) > 6:
+            teamSetList += ["5","6","7"]
 
         # Calculate any required info up front about which calcs we need to do, so
         # we've got a simple bool to check in the big loop.
