@@ -77,19 +77,19 @@ class Set:
             if otherpkmn.roundInfo not in ["A"]:
                 return False
         elif self.roundInfo == "B":
-            if otherpkmn.roundIinfo not in ["B","C"]:
+            if otherpkmn.roundInfo not in ["B","C"]:
                 return False
         elif self.roundInfo == "C":
-            if otherpkmn.roundIinfo not in ["B","C","D"]:
+            if otherpkmn.roundInfo not in ["B","C","D"]:
                 return False
         elif self.roundInfo == "D":
-            if otherpkmn.roundIinfo not in ["C","D","E","F"]:
+            if otherpkmn.roundInfo not in ["C","D","E","F"]:
                 return False
         elif self.roundInfo == "E":
-            if otherpkmn.roundIinfo not in ["D","E","F"]:
+            if otherpkmn.roundInfo not in ["D","E","F"]:
                 return False
         elif self.roundInfo == "F":
-            if otherpkmn.roundIinfo not in ["D","E","F"]:
+            if otherpkmn.roundInfo not in ["D","E","F"]:
                 return False
         return True
 
