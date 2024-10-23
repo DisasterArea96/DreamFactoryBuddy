@@ -30,7 +30,7 @@ class SetQueryHandler:
             self.inputdict = htmlHandler.buildHTML(self.inputdict, results)
         return self.inputdict
 
-    # Handles checking whether the query we've been given is valid. This mostly covers users inputting
+    # Handles checking whether the query we've been given is valid. This mostly covers users inputting`
     # invalid option combinations. We also normalise anything left unfilled, e.g. not adding a
     # Magic Number for switch logic.
     def validateQueryAndNormaliseInputs(self, results):
@@ -38,11 +38,6 @@ class SetQueryHandler:
         ivs = self.inputdict["Battle"]  # "3","6","15"
         round = self.inputdict["Round"]  # 1-8
         level = self.inputdict["Level"]  # "50","100"
-
-        # Check it's a round we support, we don't handle the NFE sets (currently).
-        if level == "50" and int(round) < 4:
-            results.addError("Error: Rounds 1-3 not supported for Level 50.")
-            return (False, results)
 
         # Check if Noland is being invoked incorrectly.
         if round not in ["3", "6", "8"] and ivs == "15":
