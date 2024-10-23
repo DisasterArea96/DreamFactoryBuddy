@@ -106,13 +106,6 @@ class Team:
         else:
             self.round = "5"
 
-        # Otherwise, if all the round markers match (e.g. Zam-3, Lanturn-3, Gengar-3) then we put it in the bucket matching their round markers.
-        elif len(set(roundmarkers)) == 1:
-            self.round = roundmarkers[0]
-        # Otherwise it's a mix of sets (e.g Whiscash-1, Armaldo-2, Manectric-3) and we're in bucket 5 again.
-        else:
-            self.round = "5"
-
     # Return a human readable list of the sets in the team.
     def readableStr(self):
         return (
