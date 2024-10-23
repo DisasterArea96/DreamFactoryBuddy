@@ -1,0 +1,770 @@
+{% load static %}
+<!doctype html>
+<head>
+    <title>Battle Factory Buddy</title>
+    <link rel="stylesheet" href="{% static 'jQuery-MultiSelect-master/jquery.multiselect.css' %}">        
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="icon" type="image/x-png" href="{% static 'NolandHeadshot.png' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'jQuery-MultiSelect-master/jquery.multiselect.js' %}"></script>
+</head>
+<html>  
+   <body>
+     <main>
+        <div class="px-4 py-3 my-2 text-center">
+            <h1 class="display-6 fw-bold text-primary">Welcome to Battle Factory Buddy</h1>            
+          </div>
+          
+        <form method="post" id="postaction" action="setcalc">
+            {% csrf_token %}
+          <div class ="row">
+            <!-- Left pane -->
+            <div class="col-sm-2">
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-primary btn-lg" style="margin-top:5px;margin:2%">Calculate</button>
+                </div>    
+               <div class="d-grid gap-2">
+                  <button type="button" onclick="nextRound()" class="btn btn-primary btn-lg" style="margin-top:5px;margin:2%">Next Battle</button>
+                </div>                     
+              <div class="col-sm-12" >
+                <div class="card" style="margin: 2%; margin-top:5px; background-color:#e6e6e6;">
+                <div class="card-body" style="margin: 0px; padding-bottom: 0%; padding-top: 2%">
+                  <h5 class="card-title">Setup</h5>
+                  <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                    
+                    <select type="text" class="form-select" id="Level" name="Level" style="max-width: 256px;" placeholder='50' selected="{{Level}}">                      
+                      <option value=100>Open Level</option>
+                      <option value=50>Level 50</option>                      
+                    </select>                      
+                  </div>
+                  <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                    <select type="text" class="form-select" id="Round" name="Round" style="max-width: 256px;" placeholder="1" selected="Water">
+                      <option value="1">Round 1</option>
+                      <option value="2">Round 2</option>        
+                      <option value="3">Round 3</option>
+                      <option value="4">Round 4</option>        
+                      <option value="5">Round 5</option>
+                      <option value="6">Round 6</option>        
+                      <option value="7">Round 7</option>        
+                      <option value="8">Round 8+</option>                              
+                    </select>      
+                  </div>
+                
+                  <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                    <select type="text" class="form-select" id="Type" name="Type" style="max-width: 256px;" placeholder="Type" selected=Water>
+                      <option value="None">No Type</option>
+                      <option value="Bug">Bug</option>
+                      <option value="Dark">Dark</option>
+                      <option value="Dragon">Dragon</option>
+                      <option value="Electric">Electric</option>
+                      <option value="Fighting">Fighting</option>
+                      <option value="Fire">Fire</option>
+                      <option value="Flying">Flying</option>
+                      <option value="Ghost">Ghost</option>
+                      <option value="Grass">Grass</option>
+                      <option value="Ground">Ground</option>
+                      <option value="Ice">Ice</option>
+                      <option value="Normal">Normal</option>
+                      <option value="Poison">Poison</option>
+                      <option value="Psychic">Psychic</option>
+                      <option value="Rock">Rock</option>
+                      <option value="Steel">Steel</option>
+                      <option value="Water">Water</option>
+                      </select>
+                  </div>                  
+                  <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                    <select type="text" class="form-select" id="Phrase" name="Phrase" style="max-width: 256px;" placeholder="Phrase" value="{{Phrase}}">
+                    <option value="0">Free-spirited and unrestrained</option>
+                    <option value="1">Total preparation</option>  
+                    <option value="2">Slow and steady</option>        
+                    <option value="3">One of Endurance</option>
+                    <option value="4">High risk, high return</option>        
+                    <option value="5">Weakening the foe to start</option>
+                    <option value="6">Impossible to predict</option>        
+                    <option value="7">Depend on the battle's flow</option>        
+                    <option value="8">Flexibly adaptable to the situation</option>                              
+                    </select>
+                  </div>
+                  <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                    <select type="text" class="form-select" id="Battle" name="Battle" style="max-width: 256px;" placeholder="Battle #" value="{{Battle}}">
+                    <option value="3">Battles 1-6</option>
+                    <option value="6">Battle 7</option>
+                    <option value="15">Noland</option>                    
+                    </select>
+                  </div>
+                </div>                      
+                              
+                <div class="card-body" style="margin: 0px; padding-bottom: 0%; padding-top: 2%">
+                  <h5 class="card-title">Your Team</h5>
+                  
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                      <select type="text" class="form-select" id="Team1" name="Team1" style="max-width: 256px;" placeholder="Team1" value="{{Team1}}">
+                        <option value="" selected>No Team Member 1</option>
+                        {{pkmn |safe}}                 
+                      </select>
+                    </div>
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                      <select type="text" class="form-select" id="Team2" name="Team2" style="max-width: 256px;" placeholder="Team2" value="{{Team2}}">
+                        <option value="" selected>No Team Member 2</option>
+                        {{pkmn |safe}}      
+                      </select>
+                    </div>
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                      <select type="text" class="form-select" id="Team3" name="Team3" style="max-width: 256px;" placeholder="Team3" value="{{Team3}}">
+                        <option value="" selected>No Team Member 3</option>
+                        {{pkmn |safe}}      
+                      </select>
+                    </div>
+                  </div>
+              <!--  </div>
+              
+              <div class="card" style="margin: 2%; margin-top:5px; background-color:#666666;"> -->
+                      <div class="card-body" style="margin: 0px; padding-bottom: 0%; padding-top: 2%">
+                        <h5 class="card-title">Draft Rejects / Last Opponents</h5>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select type="text" class="form-select" id="LastOpp1" name="LastOpp1" style="max-width: 256px;" placeholder="LastOpp1" value="{{LastOpp1}}"> 
+                            <option value="" selected>No Last Opp 1</option>
+                            {{pkmn |safe}}     
+                          </select> 
+                        </div>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select type="text" class="form-select" id="LastOpp2" name="LastOpp2" style="max-width: 256px;" placeholder="LastOpp2" value="{{LastOpp2}}">
+                            <option value="" selected>No Last Opp 2</option>
+                            {{pkmn |safe}}      
+                          </select>
+                        </div>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select type="text" class="form-select" id="LastOpp3" name="LastOpp3" style="max-width: 256px;margin-bottom: 10px" placeholder="LastOpp3" value="{{LastOpp3}}">
+                            <option value="" selected>No Last Opp 3</option>
+                            {{pkmn |safe}}      
+                          </select>
+                        </div>
+                    </div>
+                    <div class="card-body" id="switchcard" style="margin: 0px; padding-bottom: 0%; padding-top: 2%">
+                      <h5 class="card-title">Your mon on first KO</h5>                      
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select type="text" class="form-select" id="targetmon" name="targetmon" style="max-width: 256px;" placeholder="Your Mon" value="{{targetmon}}">                                
+                            <option value="" selected>No Mon Provided</option>
+                            {{pkmn |safe}}
+                          </select>
+                        </div>
+                      <h5 class="card-title">Second mon ball</h5>                      
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select type="text" class="form-select" id="ballnum" name="ballnum" style="max-width: 256px;" placeholder="" value="{{ballnum}}">                                
+                            <option value="" selected>No Ball Info Provided</option>
+                            <option value="2">Second Ball</option>
+                            <option value="3">Third Ball</option>                            
+                          </select>
+                        </div>
+                        <button type="button" class="btn btn-tertiary" data-bs-toggle="modal" data-bs-target="#BallModal">
+                          What's this ball business?
+                        </button>
+                      <h5 class="card-title">Magic Number</h5>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">                                    
+                          <input type="number" class="form-control" id="magicnumber" name="magicnumber" style="max-width: 256px;">
+                        </div>
+                      <button type="button" class="btn btn-tertiary" data-bs-toggle="modal" data-bs-target="#SwitchModal">
+                        What's the Magic Number?
+                      </button>
+                    </div>
+                </div>   
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">Options (require recalc)</div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="ProbabilitySort" name="ProbabilitySort" style="margin-left:10px">
+                  <label class="form-check-label" for="flexSwitchCheckDefault" style = "margin-left:5px"> Sort sets by probability</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="DetailMode" name="DetailMode" style="margin-left:10px">
+                  <label class="form-check-label" for="flexSwitchCheckDefault" style = "margin-left:5px"> Sets on upcoming mons (slow)</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="NoOdds" name="NoOdds" style="margin-left:10px">
+                  <label class="form-check-label" for="flexSwitchCheckDefault" style = "margin-left:5px"> "Never tell me the odds!"</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="switchin" name="switchin" style="margin-left:10px" onclick="showhideSwitch()">
+                  <label class="form-check-label" for="flexSwitchCheckDefault" style = "margin-left:5px"> Factor in switch logic (Beta)</label>
+                </div>
+                <hr>
+                <div class="d-grid gap-2">
+                  <button type="button" class="btn btn-tertiary" data-bs-toggle="modal" data-bs-target="#HelpModal">
+                    Help?
+                  </button>
+                </div>  
+                <hr>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1"><a href="/speedcalc">Speed calculator</a></div>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1"><a href="/switchincalc">Switch calculator</a></div>
+              </div>        
+              
+          </div>
+            <!-- Right pane-->
+            <div class="col-sm-10">
+              
+              <!-- Calculating notice -->
+              <div class="px-4 py-3 my-2 text-center" id="Calcbar" hidden>
+                <h1 style="align-content: center;">Calculating...</h1>
+                </div>
+                {{outputhtml |safe}}
+              <div class ="row" style="padding:0px;margin:0px">  
+                <!-- Pkmn 1-->                
+                <div class ="col-sm-4">
+                  <div class="card" style="margin: 0%; margin-top:5px; background-color:#e6e6e6;">
+                    <div class="card-body" style="margin: 0px; padding-bottom: 0%; padding-top: 2%">
+                      <h5 class="card-title">Opponent 1</h5>
+                      <div class ="row">
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select type="text" class="form-select" id="Species1" name="Species1" style="max-width: 256px;" placeholder="Species" value="{{Species1}}">
+                            <option value ="">No Opp 1</option>
+                            {{pkmn |safe}}
+                          </select>
+                        </div>
+                        
+                          <div class ="col-sm-1"></div>
+                          <div class ="col-sm-5">
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-left my-1">
+                              <select type="text" class="form-select" id="Move11" name="Move11" style="max-width: 256px;" placeholder="Move1" value ="{{Move11}}">
+                                <option value="" selected>No move 1</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-left my-1">
+                              <select type="text" class="form-select" id="Move21" name="Move21" style="max-width: 256px;" placeholder="Move2" value ="{{Move21}}">
+                                <option value="" selected>No move 2</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                          </div>
+                          
+                          <div class ="col-sm-5">
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-right my-1">
+                              <select type="text" class="form-select" id="Move31" name="Move31" style="max-width: 256px;" placeholder="Move3" value ="{{Move31}}">
+                                <option value="" selected>No move 3</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-right my-1">
+                              <select type="text" class="form-select" id="Move41" name="Move41" style="max-width: 256px;" placeholder="Move4" value ="{{Move41}}">
+                                <option value="" selected>No move 4</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                          </div>
+                          <div class ="col-sm-1"></div>
+                        
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select type="text" class="form-select" id="Item1" name="Item1" style="max-width: 256px;" placeholder="Item" value ="{{Item1}}">
+                          <option value="" selected>No item</option>
+                            {{items |safe}}
+                            </select>
+                        </div>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select id="Set1check" name="Set1check" multiple> 
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="X">X</option>                        
+                          </select>
+                        <div data-toggle="tooltip" data-placement="auto" title="Check the Help in the bottom left if you're not sure what to do with this.">ⓘ</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                                    
+                </div>
+                <!-- Pkmn 2-->                
+                <div class ="col-sm-4">
+                  <div class="card" style="margin: 0%; margin-top:5px; background-color:#e6e6e6;">
+                    <div class="card-body" style="margin: 0px; padding-bottom: 0%; padding-top: 2%">
+                      <h5 class="card-title">Opponent 2</h5>
+                      <div class ="row">
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select type="text" class="form-select" id="Species2" name="Species2" style="max-width: 256px;" placeholder="Species" value ="{{Species2}}">
+                          <option value ="" selected>No Opp 2</option>
+                            {{ pkmn |safe}}
+                            </select>
+                        </div>
+                        
+                          <div class ="col-sm-1"></div>
+                          <div class ="col-sm-5">
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-left my-1">
+                              <select type="text" class="form-select" id="Move12" name="Move12" style="max-width: 256px;" placeholder="Move1" value ="{{Move12}}">
+                                <option value="" selected>No move 1</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-left my-1">
+                              <select type="text" class="form-select" id="Move22" name="Move22" style="max-width: 256px;" placeholder="Move2" value ="{{Move22}}">
+                                <option value="" selected>No move 2</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                          </div>
+                          
+                          <div class ="col-sm-5">
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-right my-1">
+                              <select type="text" class="form-select" id="Move32" name="Move32" style="max-width: 256px;" placeholder="Move3" value ="{{Move32}}">
+                                <option value="" selected>No move 3</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-right my-1">
+                              <select type="text" class="form-select" id="Move42" name="Move42" style="max-width: 256px;" placeholder="Move4" value ="{{Move42}}">
+                                <option value="" selected>No move 4</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                          </div>
+                          <div class ="col-sm-1"></div>
+                        
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select type="text" class="form-select" id="Item2" name="Item2" style="max-width: 256px;" placeholder="Item" value ="{{Item2}}">
+                          <option value="" selected>No item</option>
+                            {{items |safe}}
+                            </select>
+                        </div>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select id="Set2check" name="Set2check" multiple> 
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="X">X</option>                        
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+                <!-- Pkmn 3-->
+                <div class ="col-sm-4">
+                  <div class="card" style="margin: 0%; margin-top:5px; margin-right:5px; background-color:#e6e6e6;">
+                    <div class="card-body" style="margin: 0px; padding-bottom: 0%; padding-top: 2%">
+                      <h5 class="card-title">Opponent 3</h5>
+                      <!--<h6 class="card-subtitle mb-2 text-muted">{}</h6>                                      -->
+                      <div class ="row">
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select type="text" class="form-select" id="Species3" name="Species3" style="max-width: 256px;" placeholder="Species" value ="{{Species3}}">
+                            <option value ="" selected>No Opp 3</option>
+                            {{ pkmn |safe}}
+                            </select>
+                        </div>
+                          <div class ="col-sm-1"></div>
+                          <div class ="col-sm-5">                        
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-left my-1">
+                              <select type="text" class="form-select" id="Move13" name="Move13" style="max-width: 256px;" placeholder="Move1" value ="{{Move13}}">
+                                <option value="" selected>No move 1</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-left my-1">
+                              <select type="text" class="form-select" id="Move23" name="Move23" style="max-width: 256px;" placeholder="Move2" value ="{{Move23}}">
+                                <option value="" selected>No move 2</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                          </div>
+                          
+                          <div class ="col-sm-5">
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-right my-1">
+                              <select type="text" class="form-select" id="Move33" name="Move33" style="max-width: 256px;" placeholder="Move3" value ="{{Move33}}">
+                                <option value="" selected>No move 3</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                            <div class="d-grid gap-0 d-sm-flex justify-content-sm-center align-items-right my-1">
+                              <select type="text" class="form-select" id="Move43" name="Move43" style="max-width: 256px;" placeholder="Move4" value ="{{Move43}}">
+                                <option value="" selected>No move 4</option>
+                                {{moves |safe}}
+                                </select>
+                            </div>
+                          </div>
+                          <div class ="col-sm-1"></div>
+                        
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select type="text" class="form-select" id="Item3" name="Item3" style="max-width: 256px;" placeholder="Item" value ="{{Item3}}">
+                            <option value="" selected>No item</option>
+                            {{items |safe}}
+                            </select>
+                        </div>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                          <select id="Set3check" name="Set3check" style="margin-bottom: 10px" multiple> 
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="X">X</option>                        
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+            </div>            
+            
+          </div>
+          </div>
+        
+          <input type="text" hidden name="Set1" id="Set1" value="" />
+          <input type="text" hidden name="Set2" id="Set2" value="" />
+          <input type="text" hidden name="Set3" id="Set3" value="" />
+        </form>
+        <footer class="bg-body-tertiary text-center text-lg-start">
+          <!-- Copyright -->
+          <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.00);">          
+            <p style="color: lightgray;">A fan site by Dave Glorbus, v{{ version |safe}}</p>
+          </div>
+          
+        </footer>
+
+      <!-- MODALS -->
+      <!-- Sets Modal -->
+      <div class="modal fade" data-bs-backdrop="false" id="SetsModal" tabindex="-1" aria-labelledby="Sets" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Sets</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              There's a bunch of stuff that this calculator doesn't factor in and this field lets you choose specific sets to include. You can leave it alone and it'll factor in everything else. See the help in the top left for more info on why you might want to use this.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>              
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Ball Modal -->
+      <div class="modal fade" data-bs-backdrop="false" id="BallModal" tabindex="-1" aria-labelledby="Ball" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="BallModalLabel">Ball tech</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h3>What is this?</h3>
+              <p>Whenever you KO an opposing mon, the opposing trainer briefly shows up and alongisde it is 3 pokeballs representing their team. KO'd mons are greyed out and healthy mons are colored in. 
+                After you KO the first mon there's no useful information here - the rightmost ball is always greyed out. However, after you've KO'd the second mon there is useful information here.</p>
+              <p>At this point the display can either look like &#9675 &#9679 &#9679 or &#9679 &#9675 &#9679. If it's the second of those then we know the AI specifically chose the 3rd mon in the party
+                and that it wasn't a tie-break.
+              </p>
+              <h3>So what do I put here?</h3>
+              <p>If you see &#9679 &#9675 &#9679 then the AI sent out the 3rd mon over the second mon, you should pick "third ball".</p>
+              <p>If you see &#9675 &#9679 &#9679 then the AI sent out the 2nd mon over the third mon, you should pick "second ball".</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>              
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Help Modal -->
+      <div class="modal fade" data-bs-backdrop="false" id="HelpModal" tabindex="-1" aria-labelledby="Help" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title" id="exampleModalLabel">Help</h3>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h3>What is this?</h3>
+              <p>This site helps you work out what opponents you're facing or likely to face in the Battle Factory in Pokemon Emerald.</p>
+              <h3>Where can I learn the basics of Battle Factory?</h3>
+              <p>This site assumes the user understands how the rounds and pokemon sets work in the Battle Factory. If that's new to you 
+                then I highly recommend you go and check out this <a href="https://youtu.be/kMAyGfeFTOw?si=pB4kvKfc3yH6U0Py">video guide 
+                  by LRXC</a>, as well as the linked resources on the video, and then come back here.</p>
+              <h3>What do I do?</h3>
+              <p>Fill in any data you know and hit calculate! If you don't select any fields it'll still run, just give you less specific data. More specifically, if you're starting a new round:
+                <li>Put the level, round and scientist information into the <b>Setup</b> section.</li>
+                <li>Put the team you've selected in the <b>Your Team</b> section (or a random 3 from the draft if you've not picked yet).</li>
+                <li>Put the 3 Pokemon you didn't pick in the <b>Draft Rejects / Last Opponents</b> section (or the other 3 from the draft if you've not picked yet).</li>
+                <li>Hit <b>Calculate</b> to see which Pokemon you're most likely to be facing.</li>
+                <li>As you're battling fill in information for each opposing Pokemon in the <b>Opponent X</b> sections and <b>Calculate</b> again whenever you like.</li>
+                <li>Once a battle is done hit the <b>Next Battle</b> button to clear out the opponents and move them into the <b>Last Opponents</b> section automatically.</li>
+                <li>Update the <b>Your Team</b> and <b>Last Opponents</b> sections if you do a swap.</li>
+                <li>Repeat!</li>
+              </p>
+              <h3>What does this cover?</h3>
+              <p>This covers calculating what pokemon set you're likely up against and which pokemon are likely to be remaining on 
+                the opponents team. It does this by factoring in the pokemon on your team, the last team you faced (or pokemon you 
+                left in the draft), the scientist information and any moves / items that you've seen the opponent pokemon use. There's
+                also the option to manually specify sets if you know some extra information not covered.</p>
+              <h3>What doesn't it cover?</h3>
+              <p>There's a few things this site doesn't automatically cover, you can factor all of these in and refine the sets yourself if you want to. Some extra ways to get info on sets namely:
+                <ul>
+                  <li><b>Damage calcs</b> - different sets have different EV spreads and natures (indicated on the set cards), meaning the same moves can do different damage coming from different sets.</li>
+                  <li><b>Speed stats</b> - similarly, different EV spreads can result in some sets outspeeding, and other sets underspeeding, your Pokemon.</li>
+                  <li><b>Items you haven't seen</b> - e.g. if a pokemon stays paralyzed when it has a Lum Berry set.</li>
+                  <li><b>Move selection</b> - AI move selection (in later rounds at least) is complicated, but there's 
+                    scope to make some deductions. For example, if an opposing Pokemon doesn't fire off a move 
+                    that'd kill your Pokemon, it's probably not that set.</li>
+                  <li><b>Swap logic</b> - The AI has logic about when it hard-swaps its Pokemon and also about which Pokemon to
+                    bring out after the first opposing Pokemon is KO'd. If the AI brings in a Gardevoir on your Salamence
+                    it's probably more likely to be a set with Ice Punch.
+                  </li>
+                </ul>
+              </p>
+              <h3>Where do I report bugs / give feedback?</h3>
+              <p> Find Dave Glorbus in the Battle Facilities Discord server</p>
+              <h3>How does it work?</h3>
+              <p>Pretty simple really. All pokemon sets are pulled from the spreadsheet linked in the guide video description. Then all possible opponent teams are worked out, respecting species clause and item clause and then 
+                assigned which rounds the team can appear in and which scientist phrases get activated. Working out probabilities is 
+                just a case of looking up the teams for given phrases and filtering out your current team, the previous team and sets
+              for your opponent that don't match the moves / items / sets you've selected. It's then counts up all valid teams left 
+              and works out the probabilities from there.</p>
+              <h3>Trivia</h3>
+              <p>There are 15,914,824 valid factory teams opponents can have (not accounting for team order, where each team has 6 orders).</p>
+              <p><b>No Type / No Phrase</b> is the most common combination (in Open Level Round 5+) - with around 4.4 million valid teams activating it. 
+                <b>No Type / High Risk, High Return</b> is next with around 4.1 million. There's a huge drop-off to third place which is <b>No Type / Slow 
+                and Steady</b> with only 900k before <b>Water / No Phrase</b> in fourth at 550k. The rarest you can see if <b>Ghost / Total Preparation</b> with only 67 possible teams, there are also a small 
+                number of combos (such as <b>Ghost / Weakening the foe to start</b>) that are impossible.</p>
+              <h3>Disclaimer</h3>
+              <p>This is a hobby project, it may be wrong and it may disappear - best of luck in your battling!</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>              
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" data-bs-backdrop="false" id="SwitchModal" tabindex="-1" aria-labelledby="Help" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title" id="exampleModalLabel">Magic Number</h3>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h3>TL;DR</h3>
+              <p>This only really matters in Open Level. In L50 and most Open Level cases just set this to 40 and you're good to go. If you've just got a kill using a high BP move, and the opponent has a high Atk/SpAtk matching that move's type then you might need to do a bit more work. In some niche cases finding the value can also provide extra info because of rounding odd numbers.<br>
+                As a rule of thumb - try plugging in 1000 and 39 and see if either changes much and do a bit more digging if it'd materially change your play.</p>
+              <h3>Credit</h3>
+              <p>All the logic used here is taken from <a href="https://docs.google.com/document/d/13E61Jj4KwhIy3ZKgLjPY-_uWKWklfBR_zUlhZHUZqik/edit?usp=sharing">Xavion's fantastic doc explaining switch-in logic.</a></p>
+              <h3>What should I do to work this out properly?</h3>
+              <p>Glad you asked. Here's the rundown!<br>
+              If the last move to be used was a status move (e.g. if you protect while the opponent dies to burn) then the number is just 3 (no need for further logic). 
+              Assuming you're not so lucky then do the following.</p>
+                <ul>
+                  <li>Get the relevant mons in your favourite damage calculator. Make sure IVs / EVs, stat boosts, weather, items etc. are all there.</li>
+                  <li>Give the opposing KO'd mon the last move used before they were KO'd. In most cases this will be the move that knocked them out, but if they die to Double-edge recoil or kill your mon and then die to poison it could be the move they used.</li>
+                  <li>Remove any relevant immunity abilities from your mon</li>
+                  <li>Remove any types from the KO'd mon that would give it STAB on that move (if you kill a Whiscash with EQ then take away its Ground type)</li>
+                  <li>Remove any types that are resisted / supereffective / immune from your mon (e.g. if your Charizard killed a Whiscash with EQ, take away Zard's Flying and Fire types)</li>
+                  <li>Find the max roll that the move would have done on the mon that killed it. (e.g. this Whiscash's EQ on flightless, fireless Zard)</li>
+                  <li>That max roll is your magic number.</li>                      
+                </ul>
+              <p>So for a 31IV Charizard-2 killing a 3IV Whiscash-3 with Earthquake - the magic number would be 73.</p>
+              <h3>Should I bother?</h3>
+              <p>Not for Level 50. In practice in Open Level this is unlikely to be particularly relevant a lot of the time. The two things that matter are whether the number is even or odd and how close it is to 256 when considering multiplying by 1.5 (for STAB) and 2.0 (for SE status moves). To break this down a bit more:</p>                        
+              <ul>
+                <li>If the number is odd then various "type ordering" nonsense can break ties on phase 2 scores in a small number of cases. </li>
+                <li>If the number is even then some of these will turn into "draws" to turn order on the Section 2 scores.</li>                    
+              </ul>
+              <p>And for the numbers, a higher number basically means more draws on section 2 scoring, with the following breakpoints and examples in those ranges:</p>
+              <ul>
+                <li><b>512</b> - most draws.<br>
+                <i>e.g. Snorlax-7 kill Marowak-2 with Hyper Beam</i></li>
+                <li><b>256</b>
+                <br><i>e.g. Manectric-1 kills Alakazam-1 with Thunderbolt </i></li>
+                <li><b>170</b>
+                <br><i>e.g. Tauros-2 kills Heracross-1 with Double-edge </i></li>
+                <li><b>128</b> - Around (and after) this point it starts to make very little difference in practice
+                <br><i>e.g. Salamence-1 kills Machamp-1 with Aerial Ace </i></li>
+                <li><b>85</b>
+                <br><i>e.g. Salamence-1 kills Machamp-1 with Aerial Ace </i></li>
+                <li><b>64</b>
+                <br><i>e.g. Venusaur-1 kills Whiscash-4 with Giga Drain </i></li>
+                <li><b>50</b> - fewest draws
+                <br><i>e.g. Swampert-1 killing Rhydon-1 with Surf</i>
+              </ul>
+              <h3>Why is it like this?</h3>
+              <p>No idea.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>              
+            </div>
+          </div>
+        </div>
+      </div>
+
+     </main>      
+
+
+     <script>
+      function convertToPost(valstring) {
+        var checkboxes = document.getElementsByName(valstring.concat("check"))[0];
+        var selected = [];
+        for (var i=0; i<checkboxes.options.length; i++) {
+          if (checkboxes.options[i].selected) {          
+            selected.push(checkboxes[i].value);
+            }
+        } 
+        selectedstr = ""
+        selectedstr = selectedstr.concat(selected)        
+        document.getElementById(valstring).value = selectedstr             
+      }
+
+      function convertFromGet(valstring) {
+        var checkboxes = document.getElementsByName(valstring.concat("check"))[0];
+        var selectedFromGet = Array.from(document.getElementById(valstring).value)        
+        for (var j=0; j<selectedFromGet.length; j++)
+          for (var i=0; i<checkboxes.options.length; i++) {                      
+            if (selectedFromGet[j] == checkboxes.options[i].label){              
+              checkboxes.options[i].selected = true;            
+            }
+          }    
+        $('select[multiple]').multiselect( 'reload' );
+      }
+
+      function resetCheckboxes(valstring) {
+        var checkboxes = document.getElementsByName(valstring.concat("check"))[0];
+        for (var i=0; i<checkboxes.options.length; i++) {          
+          checkboxes.options[i].selected = false;            
+        }                 
+        $('select[multiple]').multiselect( 'reload' );
+      }
+      function showhideSwitch() {        
+        if (document.getElementById('switchin').checked) 
+        {         
+            document.getElementById('switchcard').hidden = false;   
+        } else 
+        {         
+          document.getElementById('switchcard').hidden = true;   
+        }
+      }     
+    
+
+      function nextRound() {
+        document.getElementById('LastOpp1').value = document.getElementById('Species1').value;
+        document.getElementById('LastOpp2').value = document.getElementById('Species2').value;
+        document.getElementById('LastOpp3').value = document.getElementById('Species3').value;
+
+        document.getElementById('Species1').value = '';
+        document.getElementById('Species2').value = '';
+        document.getElementById('Species3').value = '';
+        document.getElementById('Move11').value = '';
+        document.getElementById('Move21').value = '';
+        document.getElementById('Move31').value = '';
+        document.getElementById('Move41').value = '';
+
+        document.getElementById('Move12').value = '';
+        document.getElementById('Move22').value = '';
+        document.getElementById('Move32').value = '';
+        document.getElementById('Move42').value = '';
+
+        document.getElementById('Move13').value = '';        
+        document.getElementById('Move23').value = '';
+        document.getElementById('Move33').value = '';
+        document.getElementById('Move43').value = '';
+
+        document.getElementById('Item1').value = '';
+        document.getElementById('Item2').value = '';
+        document.getElementById('Item3').value = '';     
+
+        document.getElementById('Set1').value = '';      
+        resetCheckboxes("Set1");
+        document.getElementById('Set2').value = '';
+        resetCheckboxes("Set2");
+        document.getElementById('Set3').value = '';   
+        resetCheckboxes("Set3");  
+        document.getElementById('targetmon').value = ''; 
+        document.getElementById('ballnum').value = ''; 
+        document.getElementById('magicnumber').value = '';
+      }   
+      document.body.style.zoom="70%"    
+      
+      $('select[multiple]').multiselect({
+        columns: 1,
+        texts: {
+          placeholder: 'Sets'},      
+      selectAll: true
+      });
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+        })      
+
+      if ('{{Level}}' != "")
+      {
+        document.getElementById('Level').value = '{{Level}}';
+        document.getElementById('Round').value = '{{Round}}';
+        document.getElementById('Type').value = '{{Type}}';
+        document.getElementById('Phrase').value = '{{Phrase}}';
+        document.getElementById('Team1').value = '{{Team1}}';
+        document.getElementById('Team2').value = '{{Team2}}';
+        document.getElementById('Team3').value = '{{Team3}}';
+        document.getElementById('LastOpp1').value = '{{LastOpp1}}';
+        document.getElementById('LastOpp2').value = '{{LastOpp2}}';
+        document.getElementById('LastOpp3').value = '{{LastOpp3}}';
+        document.getElementById('Species1').value = '{{Species1}}';
+        document.getElementById('Species2').value = '{{Species2}}';
+        document.getElementById('Species3').value = '{{Species3}}';
+        document.getElementById('Move11').value = '{{Move11}}';
+        document.getElementById('Move21').value = '{{Move21}}';
+        document.getElementById('Move31').value = '{{Move31}}';
+        document.getElementById('Move41').value = '{{Move41}}';
+
+        document.getElementById('Move12').value = '{{Move12}}';
+        document.getElementById('Move22').value = '{{Move22}}';
+        document.getElementById('Move32').value = '{{Move32}}';
+        document.getElementById('Move42').value = '{{Move42}}';
+
+        document.getElementById('Move13').value = '{{Move13}}';        
+        document.getElementById('Move23').value = '{{Move23}}';
+        document.getElementById('Move33').value = '{{Move33}}';
+        document.getElementById('Move43').value = '{{Move43}}';        
+        document.getElementById('Item1').value = '{{Item1}}';
+        document.getElementById('Item2').value = '{{Item2}}';
+        document.getElementById('Item3').value = '{{Item3}}';     
+        document.getElementById('Battle').value = '{{Battle}}';  
+        document.getElementById('targetmon').value = '{{targetmon}}';
+        document.getElementById('ballnum').value = '{{ballnum}}';
+        document.getElementById('magicnumber').value = '{{magicnumber}}';
+        
+
+        document.getElementById('Set1').value = '{{Set1}}';
+        convertFromGet("Set1");
+        document.getElementById('Set2').value = '{{Set2}}';
+        convertFromGet("Set2");
+        document.getElementById('Set3').value = '{{Set3}}';     
+        convertFromGet("Set3");
+        if ('{{ProbabilitySort}}' == "on"){document.getElementById('ProbabilitySort').checked = true;}        
+        if ('{{DetailMode}}' == "on"){document.getElementById('DetailMode').checked = true;}
+        if ('{{NoOdds}}' == "on"){document.getElementById('NoOdds').checked = true}
+        if ('{{switchin}}' == "on"){document.getElementById('switchin').checked = true}
+        showhideSwitch();        
+
+      }
+      else{
+        document.getElementById('ProbabilitySort').checked = true;        
+        showhideSwitch();
+      }
+
+     let loginForm = document.getElementById("postaction");
+
+     loginForm.addEventListener("submit", (e) => {
+        convertToPost("Set1")
+        convertToPost("Set2")
+        convertToPost("Set3")
+        document.getElementById('Calcbar').hidden = false;     
+       });
+     </script>
+   </body>
+</html>
