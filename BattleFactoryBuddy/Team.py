@@ -69,34 +69,43 @@ class Team:
                 if a != self.type:
                     self.type = "None"
 
-    # Work out which "round" this team can appear in. This isn't 1-1 with rounds in the game but more like buckets.
-
-    # 1 = l50 round 4 / OL round 1
-    # 2 = l50 round 5 / OL round 2
-    # 3 = l50 round 6 / OL round 3
-    # 4 = l50 round 7 / OL round 4
-    # 5 = l50 round 8+
-    # 6 = OL round 5+
-
-    # A = l50 round 1-3
-    # B = l50 round 4-6
-    # C = l50 round 4+ / OL round 1-3
-    # D = l50 round 7+ / OL (all)
-    # E = OL round 4+
-    # F = OL round 7+
-
     # ALTSETS - Edits required if your sets maps to rounds in different ways.
+    # How the buckets work here
+    # 1 - All As
+    # 2 - Has B
+    # 3 - All Cs
+    # 4 - CD
+    # 5 - All Ds
+    # 6 - DE
+    # 7 - Has F
+    # Then l50:
+    # r1-4 = [1]
+    # r4-6 = [2,3]
+    # r7+ = [3,4,5]
+    # OL:
+    # r1-3 =[3,4,5]
+    # r4-6=[5,6]
+    # r7+ = [5,6,7]
     def initCalculateRound(self):
         roundmarkers = []
         for monset in self.sets:
             roundmarkers.append(monset.roundInfo)        
         
-        # If we have an OL r5+ mon (e.g. Dragonite-1) then we know the whole team can only appear in bucket 6.
-        if "6" in roundmarkers:
+        if "A" in roundmarkers:
+            self.round = "1"
+        elif "B" in roundmarkers:
+            self.round = "2"
+        elif "F" in roundmarkers:
+            self.round = "7"
+        elif "C" in roundmarkers and "D" in roundmarkers:
+            self.round = "4"
+        elif "D" in roundmarkers and "E" in roundmarkers:
             self.round = "6"
-        # Similarly, if there's another legendary then we're in bucket 5.
-        elif "5" in roundmarkers:
+        elif "C" in roundmarkers:
+            self.round = "3"
+        else:
             self.round = "5"
+
         # Otherwise, if all the round markers match (e.g. Zam-3, Lanturn-3, Gengar-3) then we put it in the bucket matching their round markers.
         elif len(set(roundmarkers)) == 1:
             self.round = roundmarkers[0]
