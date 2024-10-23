@@ -61,6 +61,14 @@ class SetCalcHandler:
         round = inputdict["Round"]
 
         # ALTSETS - if you have different rules on which teams are in which rounds then change it here.
+
+        # A = l50 round 1-3
+        # B = l50 round 4-6
+        # C = l50 round 4+ / OL round 1-3
+        # D = l50 round 7+ / OL (all)
+        # E = OL round 4+
+        # F = OL round 7+
+
         if (level == "50" and round == "8") or (level == "100" and int(round) > 4):
             teamSetList += ["5"]
             if level == "100":
