@@ -73,6 +73,24 @@ class Set:
             return False
         if self.speciesName == otherpkmn.speciesName:
             return False
+        if self.roundInfo == "A":
+            if otherpkmn.roundInfo not in ["A"]:
+            return False
+        elif self.roundInfo == "B":
+            if otherpkmn.roundIinfo not in ["B","C"]:
+                return False
+        elif self.roundInfo == "C":
+            if otherpkmn.roundIinfo not in ["B","C","D"]:
+                return False
+        elif self.roundInfo == "D":
+            if otherpkmn.roundIinfo not in ["C","D","E","F"]:
+                return False
+        elif self.roundInfo == "E":
+            if otherpkmn.roundIinfo not in ["D","E","F"]:
+                return False
+        elif self.roundInfo == "F":
+            if otherpkmn.roundIinfo not in ["D","E","F"]:
+                return False
         return True
 
     def getSpeciesName(self):
