@@ -9,7 +9,7 @@ Check out this <a href="https://youtu.be/kMAyGfeFTOw?si=pB4kvKfc3yH6U0Py">video 
 
 ## Quick Start - First time setup for running on your own PC.
 * Download this repository as a ZIP file (click the Green Code button) and extract it somewhere on your PC.
-* Install python 3.9 or higher. Google is your friend.
+* If you don't already have python. Go to <a href="https://www.python.org/downloads/">python.org<a> and download the latest version of python and install it (you'll probably want the Windows-64 bit installer when given a big list of things to download).
 * Open file explorer and double click on setup. It should run for a few minutes and is done when you see `Starting development server`.
 * Open your browser and `http://127.0.0.1:8000/`, you should see the main battle factory page.
 * Close the Command prompt window when you're done.
@@ -18,7 +18,7 @@ Check out this <a href="https://youtu.be/kMAyGfeFTOw?si=pB4kvKfc3yH6U0Py">video 
 Next time just double click on `runserver` instead and go to the same place in your browser.
 
 ## Hosting the WebApp on the internet.
-I only know how to do this in Azure, where the app needs a fairly beefy (like $40 a month) App service plan. You can do this by running `az login` with an existing Azure account and then running `az webapp up --runtime PYTHON:3.9 --sku B1 --logs`. You'll then probably need to go and tweak the plan in the Azure Portal.
+I only know how to do this in Azure, where the app needs a fairly beefy (like $40 a month) App service plan. You can do this by running `az login` with an existing Azure account and then running `az webapp up --runtime PYTHON:3.11 --sku B1 --logs`. You'll then probably need to go and tweak the plan in the Azure Portal.
 
 However, this is a relatively run of the mill Django app, it should be very possible to host it elsewhere.
 
