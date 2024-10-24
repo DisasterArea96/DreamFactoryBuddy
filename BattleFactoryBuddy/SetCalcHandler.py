@@ -6,7 +6,7 @@ class SetCalcHandler:
         return
 
     def calculate(self, inputdict, results):
-        if inputdict["Battle"] == "15":
+        if inputdict["Battle"] == "11":
             return self.calculateNolandBattle(inputdict, results)
         else:
             return self.calculateStandardBattle(inputdict, results)

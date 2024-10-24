@@ -35,8 +35,8 @@ class SetQueryHandler:
     # Magic Number for switch logic.
     def validateQueryAndNormaliseInputs(self, results):
         # Check we've got a good round.
-        oppivs = self.inputdict["Battle"]  # "3","6","15"
-        round = self.inputdict["Round"]  # 1-8
+        oppivs = self.inputdict["Battle"]  # "3","7","11"
+        round = self.inputdict["Round"]  # 1-8 - 8 refers to 8+
         level = self.inputdict["Level"]  # "50","100"
 
         # Check if Noland is being invoked incorrectly.
