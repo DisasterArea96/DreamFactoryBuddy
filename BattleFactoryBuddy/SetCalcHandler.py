@@ -88,7 +88,7 @@ class SetCalcHandler:
         elif level == "100" and round in ["4","5","6"]:
             teamSetList = ["5","6"]
         elif level == "100" and int(round) > 6:
-            teamSetList += ["5","6","7"]
+            teamSetList = ["5","6","7"]
 
         # Calculate any required info up front about which calcs we need to do, so
         # we've got a simple bool to check in the big loop.

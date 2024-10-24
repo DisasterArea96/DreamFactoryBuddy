@@ -27,18 +27,16 @@ class SpeedQueryHandler:
             column +=3
         
         sets = []
-        if level == 50:
-            if round < 4:
-                inputdict["outputcol1"] = "<font size=\"20\"><b>Not supported for Level 50 rounds 1-3.</b></font><br>"
-                return(inputdict)
-            elif round < 8:
-                sets.append(round - 3)
-            else:
-                sets=[1,2,3,4,5]
-        elif round < 5:
-            sets.append(round)
-        else:
-            sets = [1,2,3,4,5,6]
+        if level == "50" and int(round) < 4:
+            sets=[1]
+        elif level == "50" and round in [4,5,6]:
+            sets=[2,3]
+        elif (level == "50" and int(round) > 6) or (level == "100" and int(round) < 4):
+            sets=[3,4,5]
+        elif level == "100" and round in [4,5,6]:
+            sets=[5,6]
+        elif level == "100" and int(round) > 6:
+            sets=[5,6,7]
         
         faster = ""
         fastercount = 0
