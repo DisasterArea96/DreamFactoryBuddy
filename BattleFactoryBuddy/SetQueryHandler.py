@@ -35,17 +35,17 @@ class SetQueryHandler:
     # Magic Number for switch logic.
     def validateQueryAndNormaliseInputs(self, results):
         # Check we've got a good round.
-        battleid = self.inputdict["Battle"]  # "3","6","15"
+        oppivs = self.inputdict["Battle"]  # "3","6","15"
         round = self.inputdict["Round"]  # 1-8
         level = self.inputdict["Level"]  # "50","100"
 
         # Check if Noland is being invoked incorrectly.
-        if round not in ["3", "6", "8"] and battleid == "15":
+        if round not in ["3", "6", "8"] and oppivs == "11":
             results.addError(
                 "Error: Opponent type has been entered as Noland but this is not a Noland round."
             )
             return (False, results)
-        elif round in ["3", "6"] and battleid == "6":
+        elif round in ["3", "6"] and oppivs == "7":
             results.addError(
                 "Error: Opponent type has not been entered as Noland but this is a Noland round."
             )
@@ -53,7 +53,7 @@ class SetQueryHandler:
 
         # If it's Noland and there's no input mons, just return a reminder
         # that there's nothing to check.
-        if battleid == "15":
+        if oppivs == "11":
             foundMonForNoland = False
             for seenSpeciesKey in SetQueryHandler.seenSpeciesKey:
                 if self.inputdict[seenSpeciesKey] != "":
