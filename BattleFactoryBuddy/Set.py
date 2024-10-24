@@ -136,62 +136,6 @@ class Set:
             + ", ".join(self.moveList)
         )
 
-    # Get the SwitchScores for this set given the important information:
-    # - The mon that the player has out (targetSpecies)
-    # - The mon that fainted (faintedSpecies)
-    # - The weird magic number that gets used for P2 calcs (magicNumber)
-    # The calling method has the responsibility of doing something useful
-    # with this information.
-    def getSwitchScores(self, faintedSpecies, targetSpecies, magicNumber):
-        p1 = self.calcSwitchScoresP1(targetSpecies)
-        p2 = self.calcSwitchScoresP2(targetSpecies, faintedSpecies, magicNumber)
-        return (p1, *p2)
-
-    def calcSwitchScoresP1(self, targetSpecies):
-        havesemove = False
-        for movestr in self.moveList:
-            move = StaticMoveDataHandler.StaticMoveDataHandler.getMove(movestr)
-            if not move.status:
-                if (
-                    StaticMoveDataHandler.StaticMoveDataHandler.applyTypeLogic(
-                        10, move.type, targetSpecies.types, False, False
-                    )
-                    > 10
-                ):
-                    if (move.type.lower() == "ground") and (
-                        "Levitate" in targetSpecies.abilities
-                    ):
-                        continue
-                    else:
-                        havesemove = True
-                        break
-        if havesemove:
-            retval = 10
-            retval = StaticMoveDataHandler.StaticMoveDataHandler.applyTypeLogic(
-                retval, targetSpecies.types, self.types, True
-            )
-            return retval
-        else:
-            return 0
-
-    def calcSwitchScoresP2(self, targetSpecies, faintedSpecies, magicNumber):
-        # Should STAB be applied before type effectiveness here?
-        highestscore = 0        
-        wrapped = False
-        for movestr in self.moveList:
-            move = StaticMoveDataHandler.StaticMoveDataHandler.getMove(movestr)
-            # It's intentional that we go in here for status moves.
-            if move.isNormalDamaging():
-                moveval = int(magicNumber)
-                for type in faintedSpecies.types:
-                    if move.type.lower() == type.lower():
-                        moveval = int(moveval * 1.5)
-                moveval = StaticMoveDataHandler.StaticMoveDataHandler.applyTypeLogic(
-                    moveval, move.type, targetSpecies.types
-                )
-                if moveval > 256:
-                    wrapped = True
-                if moveval > highestscore:
-                    highestscore = moveval % 256
-                
-        return (highestscore, 256 if wrapped else highestscore)
+    # get speed for switching calculation
+    def getSwitchSpeed(self, inputdict):
+            return ((self.calcspeed(inputdict["Level"], inputdict["Round"]),0,0)
