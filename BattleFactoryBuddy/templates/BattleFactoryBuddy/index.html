@@ -141,33 +141,6 @@
                           </select>
                         </div>
                     </div>
-                    <div class="card-body" id="switchcard" style="margin: 0px; padding-bottom: 0%; padding-top: 2%">
-                      <h5 class="card-title">Your mon on first KO</h5>                      
-                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
-                          <select type="text" class="form-select" id="targetmon" name="targetmon" style="max-width: 256px;" placeholder="Your Mon" value="{{targetmon}}">                                
-                            <option value="" selected>No Mon Provided</option>
-                            {{pkmn |safe}}
-                          </select>
-                        </div>
-                      <h5 class="card-title">Second mon ball</h5>                      
-                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
-                          <select type="text" class="form-select" id="ballnum" name="ballnum" style="max-width: 256px;" placeholder="" value="{{ballnum}}">                                
-                            <option value="" selected>No Ball Info Provided</option>
-                            <option value="2">Second Ball</option>
-                            <option value="3">Third Ball</option>                            
-                          </select>
-                        </div>
-                        <button type="button" class="btn btn-tertiary" data-bs-toggle="modal" data-bs-target="#BallModal">
-                          What's this ball business?
-                        </button>
-                      <h5 class="card-title">Magic Number</h5>
-                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">                                    
-                          <input type="number" class="form-control" id="magicnumber" name="magicnumber" style="max-width: 256px;">
-                        </div>
-                      <button type="button" class="btn btn-tertiary" data-bs-toggle="modal" data-bs-target="#SwitchModal">
-                        What's the Magic Number?
-                      </button>
-                    </div>
                 </div>   
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">Options (require recalc)</div>
                 <div class="form-check form-switch">
