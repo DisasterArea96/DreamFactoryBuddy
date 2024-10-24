@@ -11,7 +11,7 @@ class SetCalcHandler:
         else:
             return self.calculateStandardBattle(inputdict, results)
 
-    def generateListOfListsOfRequiredSets(self, inputdict):
+    def generateListOfListsOfRequiredSets(self, inputdict,overrideSetTo3 = False):
         requiredListList = []
         idx = 1
         while idx <= 3:
@@ -33,7 +33,7 @@ class SetCalcHandler:
                 requiredListList.append(
                     StaticDataHandler.StaticDataHandler.getSpeciesFromName(
                         inputdict["Species" + str(idx)]
-                    ).filter(moves, items, ids)
+                    ).filter(moves, items, ids if not overrideSetTo3 else ['3'])
                 )
             idx += 1
         return requiredListList
@@ -235,8 +235,16 @@ class SetCalcHandler:
                 )
             results.addNote(resultNote)
 
+        # If this is round 6 L50 or round 3 OL then Noland is limited to set 3 mons. Work that out so
+        # we can filter to only the ones that are possible.
+        overrideSetTo3 = False
+        if inputdict["Level"] == "50" and inputdict["Round"] == "6":
+            overrideSetTo3 = True
+        elif inputdict["Level"] == "100" and inputdict["Round"] == "3":
+            overrideSetTo3 = True
+
         # Get all the possible sets we've seen from Noland.
-        requiredListList = self.generateListOfListsOfRequiredSets(inputdict)
+        requiredListList = self.generateListOfListsOfRequiredSets(inputdict, overrideSetTo3=overrideSetTo3)
 
         # If we've not got anything species specified then the query handler will have returned an error.
 
