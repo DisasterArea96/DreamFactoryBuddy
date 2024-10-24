@@ -30,7 +30,7 @@ class SetQueryHandler:
             self.inputdict = htmlHandler.buildHTML(self.inputdict, results)
         return self.inputdict
 
-    # Handles checking whether the query we've been given is valid. This mostly covers users inputting`
+    # Handles checking whether the query we've been given is valid. This mostly covers users inputting
     # invalid option combinations. We also normalise anything left unfilled, e.g. not adding a
     # Magic Number for switch logic.
     def validateQueryAndNormaliseInputs(self, results):
