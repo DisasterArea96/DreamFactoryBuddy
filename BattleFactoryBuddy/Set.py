@@ -49,10 +49,16 @@ class Set:
     # Returns the speed of the mon given the round and battle the mon is in.
     def calcspeed(self, inputdict):
         level = int(inputdict["Level"])
+<<<<<<< HEAD
         ivs = int(inputdict["Battle"])
         if ivs == 15 and inputdict["Round"] in ("6", "8"):
             ivs = 31
         return self.calcspeedraw(level, ivs)
+=======
+        calced_ivs = int(inputdict["Battle"]) + ((inputdict["Round"] - 1) * 4)
+        ivs = min(calced_ivs, 31)
+        return self.calcspeedinternal(level, ivs)
+>>>>>>> 4b7220c (updated speed calculation)
 
     # Returns the speed value given the exact level and IVs.
     def calcspeedraw(self, level, ivs):
