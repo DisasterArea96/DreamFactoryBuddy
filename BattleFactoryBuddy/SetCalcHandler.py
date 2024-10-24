@@ -95,29 +95,10 @@ class SetCalcHandler:
         switchlogic = False
         if (
             "switchin" in inputdict
-            and "targetmon" in inputdict
-            and inputdict["targetmon"] != ""
             and inputdict["Species2"] != ""
             and inputdict["Species1"] != ""
         ):
             switchlogic = True
-            if "magicnumber" not in inputdict or inputdict["magicnumber"] == "":
-                inputdict["magicnumber"] = 40
-            magicNumber = inputdict["magicnumber"]
-            faintedSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(
-                inputdict["Species1"]
-            )
-            targetSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(
-                inputdict["targetmon"]
-            )
-            resultNote = "Calculating assuming {} switched in when {} KO'd {}".format(
-                inputdict["Species2"], inputdict["targetmon"], inputdict["Species1"]
-            )
-            if inputdict["ballnum"] != "" and inputdict["Species3"] != "":
-                resultNote += ", and that {} was in ball {}".format(
-                    inputdict["Species2"], inputdict["ballnum"]
-                )
-            results.addNote(resultNote)
 
         # Take a deep breath and pull each possible team one at a time from the
         # StaticDataHandler's iterable method.
@@ -158,12 +139,7 @@ class SetCalcHandler:
             if foundDisallowed:
                 continue
 
-            # Run switch logic. We assume that A B C is as likely as A C B and therefore if B always
-            # comes in over C it's twice as likely that this team is what's happened. If C always
-            # comes in over B, but we've got B in front of us then it's an impossible team.
-            # Note, we can only do anything here if we've already had 2 mons defined for us, which
-            # cuts down the number of sets we can be dealing with a lot. We therefore chose to
-            # recalc some stuff here to keep the above code neat and tidy.
+            # Run switch logic.
             if switchlogic:
                 # Get the switch scores for Species2 and Species3 (which may or may not have been defined).
                 for set in team:
@@ -171,31 +147,11 @@ class SetCalcHandler:
                         set
                     ).speciesName
                     if speciesName == inputdict["Species2"]:
-                        species2SwitchScores = (
-                            StaticDataHandler.StaticDataHandler.getSetFromId(
-                                set
-                            ).getSwitchScores(
-                                faintedSpecies, targetSpecies, magicNumber
-                            )
-                        )
+                        species2Speed = getSwitchSpeed(set)
                     elif speciesName != inputdict["Species1"]:
-                        species3SwitchScores = (
-                            StaticDataHandler.StaticDataHandler.getSetFromId(
-                                set
-                            ).getSwitchScores(
-                                faintedSpecies, targetSpecies, magicNumber
-                            )
-                        )
+                        species3Speed = getSwitchSpeed(set)
 
-                if inputdict["Species3"] != "" and inputdict["ballnum"] != "":
-                    addCount = SwitchLogicCalculator.SwitchLogicCalculator.getTeamCountFromSwitchScoresValWithBall(
-                        species2SwitchScores, species3SwitchScores, inputdict["ballnum"]
-                    )
-                else:
-                    addCount = SwitchLogicCalculator.SwitchLogicCalculator.getTeamCountFromSwitchScoresVal(
-                        species2SwitchScores, species3SwitchScores
-                    )
-                if addCount > 0:
+                if species2Speed >= species3Speed:
                     results.addTeam(team, addCount)
 
             # We've got a valid team and how many we want it to count for. Save that off in our results object.
@@ -211,40 +167,13 @@ class SetCalcHandler:
         switchin = False
         if (
             "switchin" in inputdict
-            and "targetmon" in inputdict
-            and inputdict["targetmon"] != ""
             and inputdict["Species2"] != ""
             and inputdict["Species1"] != ""
         ):
             switchin = True
-            if "magicnumber" not in inputdict or inputdict["magicnumber"] == "":
-                inputdict["magicnumber"] = 40
-            magicNumber = inputdict["magicnumber"]
-            faintedSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(
-                inputdict["Species1"]
-            )
-            targetSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(
-                inputdict["targetmon"]
-            )
-            resultNote = "Calculating assuming {} switched in when {} KO'd {}".format(
-                inputdict["Species2"], inputdict["targetmon"], inputdict["Species1"]
-            )
-            if inputdict["ballnum"] != "" and inputdict["Species3"] != "":
-                resultNote += ", and that {} was in ball {}".format(
-                    inputdict["Species2"], inputdict["ballnum"]
-                )
-            results.addNote(resultNote)
-
-        # If this is round 6 L50 or round 3 OL then Noland is limited to set 3 mons. Work that out so
-        # we can filter to only the ones that are possible.
-        overrideSetTo3 = False
-        if inputdict["Level"] == "50" and inputdict["Round"] == "6":
-            overrideSetTo3 = True
-        elif inputdict["Level"] == "100" and inputdict["Round"] == "3":
-            overrideSetTo3 = True
 
         # Get all the possible sets we've seen from Noland.
-        requiredListList = self.generateListOfListsOfRequiredSets(inputdict, overrideSetTo3=overrideSetTo3)
+        requiredListList = self.generateListOfListsOfRequiredSets(inputdict, False)
 
         # If we've not got anything species specified then the query handler will have returned an error.
 
@@ -284,26 +213,10 @@ class SetCalcHandler:
                                 s3set
                             ) and s2set.compatibilitycheck(s3set):
                                 if switchin:
-                                    species2SwitchScores = s2set.getSwitchScores(
-                                        faintedSpecies, targetSpecies, magicNumber
-                                    )
-                                    species3SwitchScores = s3set.getSwitchScores(
-                                        faintedSpecies, targetSpecies, magicNumber
-                                    )
-                                    if (
-                                        inputdict["Species3"] != ""
-                                        and inputdict["ballnum"] != ""
-                                    ):
-                                        addCount = SwitchLogicCalculator.SwitchLogicCalculator.getTeamCountFromSwitchScoresValWithBall(
-                                            species2SwitchScores,
-                                            species3SwitchScores,
-                                            inputdict["ballnum"],
-                                        )
-                                    else:
-                                        addCount = SwitchLogicCalculator.SwitchLogicCalculator.getTeamCountFromSwitchScoresVal(
-                                            species2SwitchScores, species3SwitchScores
-                                        )
-                                    if addCount > 0:
+                                    species2Speed = s2set.getSwitchSpeed(s2Id)
+                                    species3Speed = s3set.getSwitchSpeed(s3set)
+
+                                    if species3Speed <= species2speed:
                                         results.addTeam(
                                             (s1Id, s2Id, s3set.uid), addCount
                                         )
