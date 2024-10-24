@@ -52,7 +52,7 @@ class SetQueryHandler:
             return (False, results)
         elif round in ["3", "6"] and ivs == "6":
             results.addError(
-                "Error: Opponent type has not been entered as Noland but this is not a Noland round."
+                "Error: Opponent type has not been entered as Noland but this is a Noland round."
             )
             return (False, results)
 
