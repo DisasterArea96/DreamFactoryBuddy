@@ -1,5 +1,4 @@
 import BattleFactoryBuddy.StaticDataHandler as StaticDataHandler
-import BattleFactoryBuddy.SwitchLogicCalculator as SwitchLogicCalculator
 
 class SetCalcHandler:
     def __init__(self):
