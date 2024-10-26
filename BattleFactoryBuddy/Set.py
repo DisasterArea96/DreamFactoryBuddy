@@ -49,20 +49,9 @@ class Set:
     # Returns the speed of the mon given the round and battle the mon is in.
     def calcspeed(self, inputdict):
         level = int(inputdict["Level"])
-<<<<<<< HEAD
-<<<<<<< HEAD
-        ivs = int(inputdict["Battle"])
-        if ivs == 15 and inputdict["Round"] in ("6", "8"):
-            ivs = 31
-        return self.calcspeedraw(level, ivs)
-=======
-        calced_ivs = int(inputdict["Battle"]) + ((inputdict["Round"] - 1) * 4)
-=======
         calced_ivs = int(inputdict["Battle"]) + ((int(inputdict["Round"]) - 1) * 4)
->>>>>>> a5d6520 (Changes from DaveGlorbus diff)
         ivs = min(calced_ivs, 31)
-        return self.calcspeedinternal(level, ivs)
->>>>>>> 4b7220c (updated speed calculation)
+        return self.calcspeedraw(level, ivs)
 
     # Returns the speed value given the exact level and IVs.
     def calcspeedraw(self, level, ivs):
@@ -95,10 +84,7 @@ class Set:
         elif self.roundInfo == "D":
             if otherpkmn.roundInfo not in ["C","D","E","F"]:
                 return False
-        elif self.roundInfo == "E":
-            if otherpkmn.roundInfo not in ["D","E","F"]:
-                return False
-        elif self.roundInfo == "F":
+        elif self.roundInfo in ("E","F"):
             if otherpkmn.roundInfo not in ["D","E","F"]:
                 return False
         return True
