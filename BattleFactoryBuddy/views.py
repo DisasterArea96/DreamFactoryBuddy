@@ -39,9 +39,12 @@ def setcalc(request):
 @csrf_exempt
 def speedcalc(request):
     if request.method == 'POST':        
+        t1_start = perf_counter() 
         context = request.POST.dict()                
-        context = SpeedQueryHandler.SpeedQueryHandler.getspeedoutputs(context)     
+        context = SpeedQueryHandler.SpeedQueryHandler.calcSpeedOutputs(context)     
         context["version"] = StaticDataHandler.StaticDataHandler.getVersion()   
+        t1_stop = perf_counter() 
+        print("Elapsed time: ", t1_stop - t1_start)
         return render(request, 'BattleFactoryBuddy/speedcalc.html', context)
     else:
         context = {}

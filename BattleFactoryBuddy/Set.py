@@ -52,10 +52,10 @@ class Set:
         ivs = int(inputdict["Battle"])
         if ivs == 15 and inputdict["Round"] in ("6", "8"):
             ivs = 31
-        return self.calcspeedinternal(level, ivs)
+        return self.calcspeedraw(level, ivs)
 
     # Returns the speed value given the exact level and IVs.
-    def calcspeedinternal(self, level, ivs):
+    def calcspeedraw(self, level, ivs):
         return math.floor(
             (
                 math.floor(
@@ -103,7 +103,7 @@ class Set:
             self.moveList[3],
             self.nature,
             self.evs,
-            self.calcspeedinternal(level, ivs),
+            self.calcspeedraw(level, ivs),
         )
 
     # Returns a string representation of this set to use in tooltips.

@@ -62,29 +62,6 @@ def generateTeamList():
                     o.write(teamStr + "\n")
                 print("Written to ../Data/"+str(a) + "-" + str(b) + ".csv")
 
-# Calculate the speed for all possible opposing mons. This is all sets in both and l50 and OL and 3IV, 6IV, 15IV, 31IV.
-# How pokemon stats works means that some sets swap their order depending on the level and IV tier. We don't attempt to
-# address that here in the ordering and it is instead handled at query time.
-def generateSpeedList():
-    print("Creating Speed Tiers")
-    setList = StaticDataHandler.StaticDataHandler.getSetList()
-    # Use 31IV open level as the master. That's least likely to have ties.
-    speeddict = {}
-    for set in setList:
-        speed = set.calcspeedinternal(50,3)
-        if speed not in speeddict:
-            speeddict[speed] = []
-        speeddict[speed].append(set)
-    sortedspeeds = list(speeddict.keys())
-    sortedspeeds.sort(reverse=True)    
-
-    with open("./BattleFactoryBuddy/Data/Pokemonspeedtiers.csv","w") as r:
-        r.write("Pokemon,round,l50_3,l50_6,l50_15,l50_31,l100_3,l100_6,l100_15,l100_31,quickclaw\n")
-        for speed in sortedspeeds:
-            for set in speeddict[speed]:
-                r.write(",".join([set.id,str(set.roundInfo),str(set.calcspeedinternal(50,3)),str(set.calcspeedinternal(50,6)),str(set.calcspeedinternal(50,15)),str(set.calcspeedinternal(50,31)),str(set.calcspeedinternal(100,3)),str(set.calcspeedinternal(100,6)),str(set.calcspeedinternal(100,15)),str(set.calcspeedinternal(100,31)),str(set.item=="Quick Claw")+ "\n"]))
-    print("Done creating speed tiers!")
-
 # A utility function for checking the data on set moves and their phrases is consistent.
 # As an example, the base spreadsheet for factory had Registeel-3 as 0 0 4 4 whereas Amnesia
 # meant it should have been 0 1 4 4, this catches those issues (especially useful if you've edited the sets for some reason).
@@ -169,8 +146,7 @@ def generateTypeEffectivenessCode():
 
 if __name__ == "__main__":
     print("This will take a while (maybe 5-10 mins?), it gets faster as it goes though!")
-    validateSetInfo()
-    generateSpeedList()    
+    validateSetInfo()    
     generateTeamList()
     # Various utility functions that aren't needed to be run in most cases.
     # generateMoveList()
