@@ -97,10 +97,10 @@ class Team:
             self.round = "2"
         elif "F" in roundmarkers:
             self.round = "7"
+        elif "E" in roundmarkers:
+            self.round = "6"
         elif "C" in roundmarkers and "D" in roundmarkers:
             self.round = "4"
-        elif "D" in roundmarkers and "E" in roundmarkers:
-            self.round = "6"
         elif "C" in roundmarkers:
             self.round = "3"
         else:
