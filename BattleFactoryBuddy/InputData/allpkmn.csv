@@ -1030,12 +1030,12 @@ Normal,0 0 0 0,Tauros,5,Naive,Lum Berry,Frustration,Fire Blast,Earthquake,Iron T
 Normal,0 5 0 5,Tauros,6,Impish,Lum Berry,Frustration,Scary Face,Earthquake,Tail Whip,E,Intimidate,255/ 0 / 0 / 0 /255/ 0 ,110,1030
 Normal,0 3 0 3,Tauros,7,Impish,Leftovers,Body Slam,Refresh,Earthquake,Protect,E,Intimidate,255/ 0 /255/ 0 / 0 / 0 ,110,1031
 Normal,0 3 0 0,Tauros,8,Impish,Silk Scarf,Body Slam,Rest,Sleep Talk,Iron Tail,E,Intimidate,255/ 0 / 0 / 0 /255/ 0 ,110,1032
-Water Poison,5 0 0 4,Tentacruel,1,Modest,(no item),Thief,Surf,Ice Beam,Mirror Coat,C,Clear Body, Liquid Ooze,255/ 0 / 0 /255/ 0 / 0 ,100,1033
-Water Poison,2 0 0 3,Tentacruel,2,Calm,Mago Berry,Toxic,Surf,Ice Beam,Rapid Spin,C,Clear Body, Liquid Ooze,255/ 0 /255/ 0 / 0 / 0 ,100,1034
-Water Poison,0 0 0 0,Tentacruel,3,Quiet,Lum Berry,Sludge Bomb,Surf,Ice Beam,Giga Drain,D,Clear Body, Liquid Ooze,255/ 0 / 0 /255/ 0 / 0 ,100,1035
-Water Poison,0 0 1 3,Tentacruel,4,Sassy,Chesto Berry,Sludge Bomb,Surf,Swords Dance,Rest,D,Clear Body, Liquid Ooze,255/ 0 /255/ 0 / 0 / 0 ,100,1036
-Water Poison,0 0 1 6,Tentacruel,5,Hasty,Salac Berry,Sludge Bomb,Surf,Swords Dance,Substitute,D,Clear Body, Liquid Ooze, 0 /255/ 0 / 0 / 0 /255,100,1037
-Water Poison,0 0 0 7,Tentacruel,6,Hasty,Mystic Water,Sludge Bomb,Hydro Pump,Ice Beam,Rain Dance,D,Clear Body, Liquid Ooze, 0 / 0 / 0 /255/ 0 /255,100,1038
+Water Poison,5 0 0 4,Tentacruel,1,Modest,(no item),Thief,Surf,Ice Beam,Mirror Coat,C,Clear Body / Liquid Ooze,255/ 0 / 0 /255/ 0 / 0 ,100,1033
+Water Poison,2 0 0 3,Tentacruel,2,Calm,Mago Berry,Toxic,Surf,Ice Beam,Rapid Spin,C,Clear Body / Liquid Ooze,255/ 0 /255/ 0 / 0 / 0 ,100,1034
+Water Poison,0 0 0 0,Tentacruel,3,Quiet,Lum Berry,Sludge Bomb,Surf,Ice Beam,Giga Drain,D,Clear Body / Liquid Ooze,255/ 0 / 0 /255/ 0 / 0 ,100,1035
+Water Poison,0 0 1 3,Tentacruel,4,Sassy,Chesto Berry,Sludge Bomb,Surf,Swords Dance,Rest,D,Clear Body / Liquid Ooze,255/ 0 /255/ 0 / 0 / 0 ,100,1036
+Water Poison,0 0 1 6,Tentacruel,5,Hasty,Salac Berry,Sludge Bomb,Surf,Swords Dance,Substitute,D,Clear Body / Liquid Ooze, 0 /255/ 0 / 0 / 0 /255,100,1037
+Water Poison,0 0 0 7,Tentacruel,6,Hasty,Mystic Water,Sludge Bomb,Hydro Pump,Ice Beam,Rain Dance,D,Clear Body / Liquid Ooze, 0 / 0 / 0 /255/ 0 /255,100,1038
 Normal Flying,0 0 0 0,Togetic,1,Adamant,Choice Band,Swift,Aerial Ace,Brick Break,Tri-Attack,A,Hustle / Serene Grace,255/255/ 0 / 0 / 0 / 0 ,40,1039
 Normal Flying,2 3 2 0,Togetic,2,Calm,Twisted Spoon,Thunder Wave,Soft-Boiled,Encore,Psychic,A,Hustle / Serene Grace,255/ 0 /255/ 0 / 0 / 0 ,40,1040
 Fire,0 7 0 3,Torkoal,1,Bold,Charcoal,Flamethrower,Eruption,Sleep Talk,Rest,A,White Smoke,255/ 0 / 0 / 0 /255/ 0 ,20,1041
