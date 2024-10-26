@@ -68,7 +68,7 @@ class Set:
     # Returns a boolean based on whether these two Sets could be in the same opposing team, checking item clause and
     # species clause. Used when generating teams.
     def compatibilitycheck(self, otherpkmn):
-        if self.item == otherpkmn.item:
+        if self.item == otherpkmn.item and self.item != "":
             return False
         if self.speciesName == otherpkmn.speciesName:
             return False
