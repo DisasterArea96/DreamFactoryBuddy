@@ -49,7 +49,7 @@ class Set:
     # Returns the speed of the mon given the round and battle the mon is in.
     def calcspeed(self, inputdict):
         level = int(inputdict["Level"])
-        calced_ivs = int(inputdict["Battle"]) + ((inputdict["Round"] - 1) * 4)
+        calced_ivs = int(inputdict["Battle"]) + ((int(inputdict["Round"]) - 1) * 4)
         ivs = min(calced_ivs, 31)
         return self.calcspeedinternal(level, ivs)
 
@@ -138,4 +138,4 @@ class Set:
 
     # get speed for switching calculation
     def getSwitchSpeed(self, inputdict):
-            return ((self.calcspeed(inputdict["Level"], inputdict["Round"]),0,0)
+            return (self.calcspeed(inputdict),0,0)
