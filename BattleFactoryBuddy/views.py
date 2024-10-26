@@ -4,7 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 import BattleFactoryBuddy.SetQueryHandler as SetQueryHandler
 import BattleFactoryBuddy.StaticDataHandler as StaticDataHandler
 import BattleFactoryBuddy.SpeedQueryHandler as SpeedQueryHandler
-import BattleFactoryBuddy.SwitchQueryHandler as SwitchQueryHandler
 from time import perf_counter
 
 # This is landing on the first page.
@@ -50,20 +49,3 @@ def speedcalc(request):
         context = {}
         context["version"] = StaticDataHandler.StaticDataHandler.getVersion()
         return render(request, 'BattleFactoryBuddy/speedcalc.html', context)
-
-# This is processing a request for switch-in logic
-@csrf_exempt
-def switchincalc(request):
-    if request.method == 'POST':        
-        context = request.POST.dict()                                
-        switchQueryHandler = SwitchQueryHandler.SwitchQueryHandler(context)
-        context = switchQueryHandler.handleQuery()        
-        context["pkmn"] = StaticDataHandler.StaticDataHandler.getSpeciesHTML()
-        context["version"] = StaticDataHandler.StaticDataHandler.getVersion()
-                  
-        return render(request, 'BattleFactoryBuddy/switchincalc.html', context)
-    else:        
-        context = {}
-        context["pkmn"] = StaticDataHandler.StaticDataHandler.getSpeciesHTML()
-        context["version"] = StaticDataHandler.StaticDataHandler.getVersion()        
-        return render(request, 'BattleFactoryBuddy/switchincalc.html', context)
