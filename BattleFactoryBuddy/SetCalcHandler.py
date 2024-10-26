@@ -116,8 +116,8 @@ class SetCalcHandler:
                 foundrequired = False
                 for requiredList in requiredListList:
                     foundrequired = False
-                    for set in requiredList:
-                        if set in team:
+                    for setId in requiredList:
+                        if setId in team:
                             foundrequired = True
                             break
                     if not foundrequired:
@@ -129,9 +129,9 @@ class SetCalcHandler:
 
             # Check we don't have any of the mons we shouldn't have.
             foundDisallowed = False
-            for set in team:
+            for setId in team:
                 speciesName = StaticDataHandler.StaticDataHandler.getSpeciesNameFromId(
-                    set
+                    setId
                 )
                 if speciesName in unallowedList:
                     foundDisallowed = True
@@ -142,17 +142,19 @@ class SetCalcHandler:
             # Run switch logic.
             if switchlogic:
                 # Get the switch scores for Species2 and Species3 (which may or may not have been defined).
-                for set in team:
+                for setId in team:
                     speciesName = StaticDataHandler.StaticDataHandler.getSpeciesFromId(
-                        set
+                        setId
                     ).speciesName
                     if speciesName == inputdict["Species2"]:
-                        species2Speed = getSwitchSpeed(set)
+                        species2Speed = StaticDataHandler.StaticDataHandler.getSetFromId(setId).getSwitchSpeed(inputdict)
                     elif speciesName != inputdict["Species1"]:
-                        species3Speed = getSwitchSpeed(set)
+                        species3Speed = StaticDataHandler.StaticDataHandler.getSetFromId(setId).getSwitchSpeed(inputdict)
 
-                if species2Speed >= species3Speed:
-                    results.addTeam(team, addCount)
+                if species2Speed > species3Speed:
+                    results.addTeam(team, 2)
+                elif species2Speed == species3Speed:
+                    results.addTeam(team)
 
             # We've got a valid team and how many we want it to count for. Save that off in our results object.
             else:
@@ -216,10 +218,10 @@ class SetCalcHandler:
                                     species2Speed = s2set.getSwitchSpeed(s2Id)
                                     species3Speed = s3set.getSwitchSpeed(s3set)
 
-                                    if species3Speed <= species2speed:
-                                        results.addTeam(
-                                            (s1Id, s2Id, s3set.uid), addCount
-                                        )
+                                    if species3Speed < species2Speed:
+                                        results.addTeam((s1Id, s2Id, s3set.uid), 2)
+                                    if species3Speed == species2Speed:
+                                        results.addTeam((s1Id, s2Id, s3set.uid))
                                 else:
                                     results.addTeam((s1Id, s2Id, s3set.uid))
         return results

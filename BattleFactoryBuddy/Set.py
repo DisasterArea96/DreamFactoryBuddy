@@ -50,12 +50,16 @@ class Set:
     def calcspeed(self, inputdict):
         level = int(inputdict["Level"])
 <<<<<<< HEAD
+<<<<<<< HEAD
         ivs = int(inputdict["Battle"])
         if ivs == 15 and inputdict["Round"] in ("6", "8"):
             ivs = 31
         return self.calcspeedraw(level, ivs)
 =======
         calced_ivs = int(inputdict["Battle"]) + ((inputdict["Round"] - 1) * 4)
+=======
+        calced_ivs = int(inputdict["Battle"]) + ((int(inputdict["Round"]) - 1) * 4)
+>>>>>>> a5d6520 (Changes from DaveGlorbus diff)
         ivs = min(calced_ivs, 31)
         return self.calcspeedinternal(level, ivs)
 >>>>>>> 4b7220c (updated speed calculation)
@@ -145,4 +149,4 @@ class Set:
 
     # get speed for switching calculation
     def getSwitchSpeed(self, inputdict):
-            return ((self.calcspeed(inputdict["Level"], inputdict["Round"]),0,0)
+            return (self.calcspeed(inputdict),0,0)
