@@ -19,15 +19,15 @@ class SpeedQueryHandler:
         # Work out which sets are allowable in this round.
         allowedRoundSets = []
         if level == "50" and round < 4:
-            allowedRoundSets=[1]
+            allowedRoundSets=["A"]
         elif level == "50" and round in [4,5,6]:
-            allowedRoundSets=[2,3]
+            allowedRoundSets=["B","C"]
         elif (level == "50" and round > 6) or (level == "100" and round < 4):
-            allowedRoundSets=[3,4,5]
+            allowedRoundSets=["C","D"]
         elif level == "100" and round in [4,5,6]:
-            allowedRoundSets=[5,6]
+            allowedRoundSets=["D","E"]
         elif level == "100" and round > 6:
-            allowedRoundSets=[5,6,7]
+            allowedRoundSets=["D","E","F"]
 
 
         # Calculate the speeds for all other allowable sets and sort them into the relevant buckets.
@@ -38,7 +38,7 @@ class SpeedQueryHandler:
         slowerList = []
 
         for set in StaticDataHandler.StaticDataHandler.getSetList():
-            if int(set.roundInfo) not in allowedRoundSets:
+            if set.roundInfo not in allowedRoundSets:
                 continue
             setSpeed = set.calcspeedraw(level,ivs)
             if setSpeed > refspeed:
