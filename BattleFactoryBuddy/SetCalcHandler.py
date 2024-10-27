@@ -33,7 +33,6 @@ class SetCalcHandler:
                     StaticDataHandler.StaticDataHandler.getSpeciesFromName(
                         inputdict["Species" + str(idx)]
                     ).filter(moves, items, ids if not overrideSetTo3 else ['3'])
-                
                 )                
             idx += 1
         return requiredListList
