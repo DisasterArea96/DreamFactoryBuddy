@@ -18,15 +18,15 @@ class SpeedQueryHandler:
 
         # Work out which sets are allowable in this round.
         allowedRoundSets = []
-        if level == "50" and round < 4:
+        if level == 50 and round < 4:
             allowedRoundSets=["A"]
-        elif level == "50" and round in [4,5,6]:
+        elif level == 50 and round in [4,5,6]:
             allowedRoundSets=["B","C"]
-        elif (level == "50" and round > 6) or (level == "100" and round < 4):
+        elif (level == 50 and round > 6) or (level == 100 and round < 4):
             allowedRoundSets=["C","D"]
-        elif level == "100" and round in [4,5,6]:
+        elif level == 100 and round in [4,5,6]:
             allowedRoundSets=["D","E"]
-        elif level == "100" and round > 6:
+        elif level == 100 and round > 6:
             allowedRoundSets=["D","E","F"]
 
 
