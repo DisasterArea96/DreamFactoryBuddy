@@ -173,8 +173,6 @@ class SetQueryHTMLHandler:
         self.results = results
         self.level = int(inputdict["Level"])
         self.ivs = int(inputdict["Battle"])
-        if self.ivs == 15 and inputdict["Round"] in ("6", "8"):
-            self.ivs = 31
         self.noOdds = "NoOdds" in self.inputdict
         self.inputdict["outputhtml"] = self.populateTopContainer()
         return self.inputdict
