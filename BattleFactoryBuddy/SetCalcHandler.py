@@ -28,12 +28,13 @@ class SetCalcHandler:
                     items.remove("")
                 ids = inputdict["Set" + str(idx)].split(",")
                 while "" in ids:
-                    ids.remove("")
+                    ids.remove("")                    
                 requiredListList.append(
                     StaticDataHandler.StaticDataHandler.getSpeciesFromName(
                         inputdict["Species" + str(idx)]
                     ).filter(moves, items, ids if not overrideSetTo3 else ['3'])
-                )
+                
+                )                
             idx += 1
         return requiredListList
 
