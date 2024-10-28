@@ -68,18 +68,19 @@ class SetQueryHandler:
                 results.addError("Noland Time! He can have any set you don't have.")
                 return (False, results)
 
-        # Check if any of the seen mons are mons we've said can't happen.
-        for seenSpeciesKey in SetQueryHandler.seenSpeciesKey:
-            if self.inputdict[seenSpeciesKey] != "":
-                for blockedSpeciesKey in SetQueryHandler.blockedSpeciesKey:
-                    if (
-                        self.inputdict[seenSpeciesKey]
-                        == self.inputdict[blockedSpeciesKey]
-                    ):
-                        results.addError(
-                            "Error: Opponent species %s is entered as being on your team or the last team."%(self.inputdict[seenSpeciesKey])
-                        )
-                        return (False, results)
+        # If it's not Noland, check if any of the seen mons are mons we've said can't happen.
+        if ivs != "15":
+            for seenSpeciesKey in SetQueryHandler.seenSpeciesKey:
+                if self.inputdict[seenSpeciesKey] != "":
+                    for blockedSpeciesKey in SetQueryHandler.blockedSpeciesKey:
+                        if (
+                            self.inputdict[seenSpeciesKey]
+                            == self.inputdict[blockedSpeciesKey]
+                        ):
+                            results.addError(
+                                "Error: Opponent species %s is entered as being on your team or the last team."%(self.inputdict[seenSpeciesKey])
+                            )
+                            return (False, results)
 
         # Add in the magic number if the user hasn't entered one and switch-in logic is on.
         if (
