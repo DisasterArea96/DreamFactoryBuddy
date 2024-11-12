@@ -252,7 +252,7 @@ class SetQueryHTMLHandler:
         # If it's a Noland battle we don't need the concertinas.
         elif self.inputdict["Battle"] == "15":
             return ""
-        elif "NoOdds" in self.inputdict:
+        elif "NoOdds" in self.inputdict or "setleveldetail" in self.inputdict:
             return self.populateSingleConcertina()
         else:
             return self.populateTripleConcertina()
@@ -323,14 +323,30 @@ class SetQueryHTMLHandler:
         rowlist = []
         rowcount = 0
         # Create the table to go in the concertina.
-        for (
-            speciesResult,
-            unusedVar1,
-        ) in self.results.iterGetSortedFreeAgentSpeciesResults():
-            for unusedvar2, set in speciesResult.iterGetSets():
-                row = set.getTableRow(self.level, self.ivs, self.noOdds, "")
-                rowlist.append(self.detailTableRow.format(*row))
-                rowcount += 1
+        if "setleveldetail" in self.inputdict:
+            sortablerowlist = []
+            for (
+                speciesResult,
+                speciesPercentage,
+            ) in self.results.iterGetSortedFreeAgentSpeciesResults():
+                for probability, set in speciesResult.iterGetSets():
+                    setprob = probability * speciesPercentage / 100
+                    row = set.getTableRow(self.level, self.ivs, self.noOdds, setprob)
+                    sortablerowlist.append((setprob,self.detailTableRow.format(*row)))
+                    
+                    rowcount += 1
+            sortablerowlist.sort(key=lambda tuple: tuple[0], reverse=True)
+            for (probability, row) in sortablerowlist:
+                rowlist.append(row)        
+        else: 
+            for (
+                speciesResult,
+                unusedVar1,
+            ) in self.results.iterGetSortedFreeAgentSpeciesResults():
+                for unusedvar2, set in speciesResult.iterGetSets():
+                    row = set.getTableRow(self.level, self.ivs, self.noOdds, "")
+                    rowlist.append(self.detailTableRow.format(*row))
+                    rowcount += 1
         table = self.detailTable.format("Phrase", speedIV, "".join(rowlist))
 
         # Create the concertina, populating with the table and the count. We can assume there

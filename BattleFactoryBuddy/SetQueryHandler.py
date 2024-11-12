@@ -103,6 +103,9 @@ class SetQueryHandler:
         # If we've got Detail Mode and NoOdds selected, deselect NoOdds.
         if "NoOdds" in self.inputdict and "DetailMode" in self.inputdict:
             self.inputdict.pop("DetailMode")
+        
+        if "setleveldetail" in self.inputdict and "DetailMode" not in self.inputdict:
+            self.inputdict["DetailMode"] = "on"
 
         # If we've got here then we've not found anything wrong. Return true and the (unedited) Results Object.
         return (True, results)
