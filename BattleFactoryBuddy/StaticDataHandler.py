@@ -10,7 +10,7 @@ class StaticDataHandler:
     # Loading and initialization of all static data used by the Buddy. This is loaded once and
     # is immutable over the lifetime of the app. Only exception are the team lists which are
     # loaded on demand to improve startup performance (but are also immutable).
-    version = "2.0.3"
+    version = "2.0.4"
 
     # Indexed by SetID (sequential numbers), contains Set objects.
     setDict = {}

@@ -338,6 +338,7 @@ class SetQueryHTMLHandler:
             sortablerowlist.sort(key=lambda tuple: tuple[0], reverse=True)
             for (probability, row) in sortablerowlist:
                 rowlist.append(row)        
+            table = self.detailTable.format("Odds", speedIV, "".join(rowlist))
         else: 
             for (
                 speciesResult,
@@ -347,7 +348,7 @@ class SetQueryHTMLHandler:
                     row = set.getTableRow(self.level, self.ivs, self.noOdds, "")
                     rowlist.append(self.detailTableRow.format(*row))
                     rowcount += 1
-        table = self.detailTable.format("Phrase", speedIV, "".join(rowlist))
+            table = self.detailTable.format("Phrase", speedIV, "".join(rowlist))
 
         # Create the concertina, populating with the table and the count. We can assume there
         # are results here, as otherwise we would have just returned nothing from populateConcertina
