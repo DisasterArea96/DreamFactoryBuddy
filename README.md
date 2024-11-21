@@ -7,6 +7,9 @@ The player is given some very cryptic information before each battle, using that
 
 Check out this <a href="https://youtu.be/kMAyGfeFTOw?si=pB4kvKfc3yH6U0Py">video guide by LRXC</a> if you'd like to learn more about the factory.
 
+## Quickest Start - Video guide on setup
+<a href="https://youtu.be/fw08PYYXvaA">Battle Factory Buddy Setup Guide<a>
+
 ## Quick Start - First time setup for running on your own PC.
 * Download this repository as a ZIP file (click the Green Code button) and extract it somewhere on your PC.
 * If you don't already have python. Go to <a href="https://www.python.org/downloads/">python.org<a> and download the latest version of python and install it (you'll probably want the Windows-64 bit installer when given a big list of things to download).
