@@ -11,7 +11,7 @@ class SetCalcHandler:
         else:
             return self.calculateStandardBattle(inputdict, results)
 
-    def generateListOfListsOfRequiredSets(self, inputdict,overrideSetTo3 = False):
+    def generateListOfDictsOfRequiredSets(self, inputdict,overrideSetTo3 = False):
         requiredListList = []
         idx = 1
         while idx <= 3:
@@ -42,7 +42,7 @@ class SetCalcHandler:
     def calculateStandardBattle(self, inputdict, results):
         # Get list of lists of required sets to be present in teams that are possible.
         # These are set IDs.
-        requiredDictsList = self.generateListOfListsOfRequiredSets(inputdict)
+        requiredDictsList = self.generateListOfDictsOfRequiredSets(inputdict)
 
         # Create a dict of setIDs that aren't allowed. This is all the sets of
         # all species that are on the team or the last team (or draft)
@@ -224,7 +224,7 @@ class SetCalcHandler:
             overrideSetTo3 = True
 
         # Get all the possible sets we've seen from Noland.
-        requiredListList = self.generateListOfListsOfRequiredSets(inputdict, overrideSetTo3=overrideSetTo3)
+        requiredListList = self.generateListOfDictsOfRequiredSets(inputdict, overrideSetTo3=overrideSetTo3)
 
         # If we've not got anything species specified then the query handler will have returned an error.
 
