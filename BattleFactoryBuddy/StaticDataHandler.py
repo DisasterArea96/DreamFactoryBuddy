@@ -101,6 +101,10 @@ class StaticDataHandler:
     @staticmethod
     def getSpeciesFromName(speciesName):
         return StaticDataHandler.speciesDict[speciesName]
+    
+    @staticmethod
+    def getIDsFromSpeciesName(speciesName):
+        return(StaticDataHandler.getSpeciesFromName(speciesName).getIDs())
 
     # A utility method for other utility methods. Load all teams into cache.
     @staticmethod

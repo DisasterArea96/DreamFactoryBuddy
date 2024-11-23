@@ -5,6 +5,7 @@ class Species:
         self.setList = [] 
         self.fullyInit = False       
         self.types = []
+        self.IDs = []
     
     # Add a set to this species during initialisation.
     def addSet(self, set):    
@@ -13,6 +14,7 @@ class Species:
             self.abilities = set.getAbilities()
             self.fullyInit = True    
         self.setList.append(set)
+        self.IDs.append(set.uid)
     
     # Return a list of Set.uids matching those filtered. Up to the calling code to handle
     # the case where there aren't any.
@@ -43,3 +45,9 @@ class Species:
         if len(retlist) == 0:
             print("Returned no sets for " + self.speciesName + ", likely error on input")        
         return(retlist)
+    
+    # Just get the list of IDs.
+    def getIDs(self):
+        return(self.IDs)
+
+

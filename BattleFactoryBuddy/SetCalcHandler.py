@@ -30,30 +30,28 @@ class SetCalcHandler:
                 ids = inputdict["Set" + str(idx)].split(",")
                 while "" in ids:
                     ids.remove("")
-                requiredListList.append(
-                    StaticDataHandler.StaticDataHandler.getSpeciesFromName(
+                requiredDict = {}
+                for id in StaticDataHandler.StaticDataHandler.getSpeciesFromName(
                         inputdict["Species" + str(idx)]
-                    ).filter(moves, items, ids if not overrideSetTo3 else ['3'])
-                )
+                    ).filter(moves, items, ids if not overrideSetTo3 else ['3']):
+                    requiredDict[id] = 1
+                requiredListList.append(requiredDict)
             idx += 1
         return requiredListList
 
     def calculateStandardBattle(self, inputdict, results):
         # Get list of lists of required sets to be present in teams that are possible.
         # These are set IDs.
-        requiredListList = self.generateListOfListsOfRequiredSets(inputdict)
+        requiredDictsList = self.generateListOfListsOfRequiredSets(inputdict)
 
-        # Get list of mons that aren't allowed - this is species string.
-        unallowedList = [
-            inputdict["Team1"],
-            inputdict["Team2"],
-            inputdict["Team3"],
-            inputdict["LastOpp1"],
-            inputdict["LastOpp2"],
-            inputdict["LastOpp3"],
-        ]
-        while "" in unallowedList:
-            unallowedList.remove("")
+        # Create a dict of setIDs that aren't allowed. This is all the sets of
+        # all species that are on the team or the last team (or draft)
+        unallowedDict = {}
+        for speciesName in (inputdict["Team1"],inputdict["Team2"],inputdict["Team3"],inputdict["LastOpp1"],inputdict["LastOpp2"],inputdict["LastOpp3"]):
+            if speciesName == "":
+                continue
+            for setID in StaticDataHandler.StaticDataHandler.getIDsFromSpeciesName(speciesName):
+                unallowedDict[setID] = 1
 
         # Create the list of team sets that are allowed, based on round and level.
         teamSetList = []
@@ -116,14 +114,14 @@ class SetCalcHandler:
                 continue
 
             # Check we've got one of each of the required mons
-            if len(requiredListList) > 0:
+            if len(requiredDictsList) > 0:
                 foundrequired = False
-                for requiredList in requiredListList:
+                for requiredDict in requiredDictsList:
                     foundrequired = False
-                    for set in requiredList:
-                        if set in team:
+                    for set in team:
+                        if set in requiredDict:
                             foundrequired = True
-                            break
+                            break                    
                     if not foundrequired:
                         break
                 # We can only leave the previous loop "happily" if we ended by find a suitable set match. Otherwise loop onto
@@ -133,11 +131,8 @@ class SetCalcHandler:
 
             # Check we don't have any of the mons we shouldn't have.
             foundDisallowed = False
-            for set in team:
-                speciesName = StaticDataHandler.StaticDataHandler.getSpeciesNameFromId(
-                    set
-                )
-                if speciesName in unallowedList:
+            for set in team:                
+                if set in unallowedDict:
                     foundDisallowed = True
                     break
             if foundDisallowed:
