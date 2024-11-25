@@ -135,12 +135,7 @@ class Set:
         for movestr in self.moveList:
             move = StaticMoveDataHandler.StaticMoveDataHandler.getMove(movestr)
             if not move.status:
-                if (
-                    StaticMoveDataHandler.StaticMoveDataHandler.applyTypeLogic(
-                        10, move.type, targetSpecies.types, False, False
-                    )
-                    > 10
-                ):
+                if (StaticMoveDataHandler.StaticMoveDataHandler.applyTypeLogic(10, move.type, targetSpecies.types, False, False) > 10):
                     if (move.type.lower() == "ground") and (
                         "Levitate" in targetSpecies.abilities
                     ):
@@ -150,9 +145,7 @@ class Set:
                         break
         if havesemove:
             retval = 10
-            retval = StaticMoveDataHandler.StaticMoveDataHandler.applyTypeLogic(
-                retval, targetSpecies.types, self.types, True
-            )
+            retval = StaticMoveDataHandler.StaticMoveDataHandler.applyTypeLogic(retval, targetSpecies.types, self.types, True, False)
             return retval
         else:
             return 0
@@ -169,8 +162,10 @@ class Set:
                 for type in faintedSpecies.types:
                     if move.type.lower() == type.lower():
                         moveval = int(moveval * 1.5)
+                # AI switch-in doc says this shouldn't care about ghost imms, in
+                # practice that doesn't seem to be true.
                 moveval = StaticMoveDataHandler.StaticMoveDataHandler.applyTypeLogic(
-                    moveval, move.type, targetSpecies.types
+                    moveval, move.type, targetSpecies.types, dropoutbeforeghostimms=False
                 )
                 if moveval > 256:
                     wrapped = True

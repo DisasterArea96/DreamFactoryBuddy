@@ -45,8 +45,7 @@ class SwitchQueryHandler:
                     else:
                         resultString = "<font color=\"#808080\">Either"
                     results.addH2Hresult(species1setId,species2setId, resultString)
-        self.inputdict = htmlHandler.generateHTML(self.inputdict,results)
-        print(self.inputdict["output"])
+        self.inputdict = htmlHandler.generateHTML(self.inputdict,results)        
         return(self.inputdict)
 
 class SwitchResults:
