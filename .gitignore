@@ -131,4 +131,4 @@ dmypy.json
 
 # Generated data /BattleFactoryBuddy/Data/
 BattleFactoryBuddy/Data/*
-!.placeholder
+!*.placeholder

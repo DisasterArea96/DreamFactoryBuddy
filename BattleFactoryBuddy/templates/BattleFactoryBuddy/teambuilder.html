@@ -1,0 +1,184 @@
+{% load static %}
+<!doctype html>
+<head>
+    <title>BETA - Battle Factory Buddy - Teambuilder</title>
+    <link rel="stylesheet" href="{% static 'jQuery-MultiSelect-master/jquery.multiselect.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="icon" type="image/x-png" href="{% static 'NolandHeadshot.png' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'jQuery-MultiSelect-master/jquery.multiselect.js' %}"></script>
+    
+</head>
+<html>  
+    <body>
+        <main>
+            <div class="px-4 py-3 my-2 text-center">
+                <h1 class="display-6 fw-bold text-primary">BETA - Welcome to Battle Factory Buddy - Team Builder</h1>            
+            </div>
+            <form method="post" id="postaction" action="teambuilder">
+                {% csrf_token %}
+                <div class ="row">
+                    <!-- Left pane -->
+                    <div class="col-sm-2">
+                        <div class="d-grid gap-2">
+                          <button type="submit" class="btn btn-primary btn-lg" style="margin-top:5px;margin:2%">Calculate</button>
+                        </div>                    
+                      <div class="col-sm-12" >
+                        <div class="card" style="margin: 2%; margin-top:5px; background-color:#e6e6e6;">
+                        <div class="card-body" style="margin: 0px; padding-bottom: 0%; padding-top: 2%">
+                          <h5 class="card-title">Setup</h5>
+                          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                    
+                            <select type="text" class="form-select" id="Level" name="Level" style="max-width: 256px;" placeholder='50' selected="{{Level}}">                      
+                              <option value=100>Open Level</option>
+                              <option value=50>Level 50</option>                      
+                            </select>                      
+                          </div>
+                          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                            <select type="text" class="form-select" id="Round" name="Round" style="max-width: 256px;" placeholder="1" selected="Water">
+                              <option value="1">Round 1</option>
+                              <option value="2">Round 2</option>        
+                              <option value="3">Round 3</option>
+                              <option value="4">Round 4</option>        
+                              <option value="5">Round 5</option>
+                              <option value="6">Round 6</option>        
+                              <option value="7">Round 7</option>        
+                              <option value="8">Round 8+</option>                              
+                            </select>      
+                          </div>
+                          <div>Opponent IVs</div>
+                          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                            <select type="text" class="form-select" id="OppIVs" name="OppIVs" style="max-width: 256px;" selected="3 IVs">
+                              <option value="3">3 IVs</option>
+                              <option value="15">15 IVs</option>        
+                              <option value="31">31 IVs</option>                              
+                            </select>      
+                          </div>
+                          <div>Set 1</div>
+                          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                            <select type="text" class="form-select" id="set1" name="set1" style="max-width: 256px;" placeholder="None" value="{{set1}}">                                
+                                <option value="" selected>None</option>
+                                {{pkmn |safe}}
+                            </select>
+                            <select type="text" class="form-select" id="set1IVs" name="set1IVs" style="max-width: 256px;">
+                              <option value="3">3 IVs</option>
+                              <option value="15">15 IVs</option>        
+                              <option value="31">31 IVs</option>                              
+                            </select>
+                          </div>
+                          <div>Set 2</div>
+                          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                            <select type="text" class="form-select" id="set2" name="set2" style="max-width: 256px;" placeholder="None" value="{{set2}}">
+                              <option value="" selected>None</option>
+                                {{pkmn |safe}}
+                            </select>
+                            <select type="text" class="form-select" id="set2IVs" name="set2IVs" style="max-width: 256px;">
+                              <option value="3">3 IVs</option>
+                              <option value="15">15 IVs</option>        
+                              <option value="31">31 IVs</option>                              
+                            </select>
+                          </div>
+                          <div>Set 3</div>
+                          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                            <select type="text" class="form-select" id="set3" name="set3" style="max-width: 256px;" placeholder="None" value="{{set3}}">
+                              <option value="" selected>None</option>
+                                {{pkmn |safe}}
+                            </select>
+                            <select type="text" class="form-select" id="set3IVs" name="set3IVs" style="max-width: 256px;">
+                              <option value="3">3 IVs</option>
+                              <option value="15">15 IVs</option>        
+                              <option value="31">31 IVs</option>                              
+                            </select>
+                          </div>
+                          <div>Set 4</div>
+                          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                            <select type="text" class="form-select" id="set4" name="set4" style="max-width: 256px;" placeholder="None" value="{{set4}}">
+                              <option value="" selected>None</option>
+                                {{pkmn |safe}}
+                            </select>
+                            <select type="text" class="form-select" id="set4IVs" name="set4IVs" style="max-width: 256px;">
+                              <option value="3">3 IVs</option>
+                              <option value="15">15 IVs</option>        
+                              <option value="31">31 IVs</option>                              
+                            </select>
+                          </div>
+                          <div>Set 5</div>
+                          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                            <select type="text" class="form-select" id="set5" name="set5" style="max-width: 256px;" placeholder="None" value="{{set5}}">
+                              <option value="" selected>None</option>
+                                {{pkmn |safe}}
+                            </select>
+                            <select type="text" class="form-select" id="set5IVs" name="set5IVs" style="max-width: 256px;">
+                              <option value="3">3 IVs</option>
+                              <option value="15">15 IVs</option>        
+                              <option value="31">31 IVs</option>                              
+                            </select>
+                          </div>
+                          <div>Set 6</div>
+                          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
+                            <select type="text" class="form-select" id="set6" name="set6" style="max-width: 256px;" placeholder="None" value="{{set6}}">
+                              <option value="" selected>None</option>
+                                {{pkmn |safe}}
+                            </select>              
+                            <select type="text" class="form-select" id="set6IVs" name="set6IVs" style="max-width: 256px;">
+                              <option value="3">3 IVs</option>
+                              <option value="15">15 IVs</option>        
+                              <option value="31">31 IVs</option>                              
+                            </select>
+                                      </div>
+                          
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1"><a href="/">Back to main Buddy</a></div>                    
+                </div>
+                </div>
+                    
+                <div class="col-sm-8">
+                  <font size="3">
+                    {{output |safe}}</font>
+                </div>
+                </div>
+            </form>
+            <footer class="bg-body-tertiary text-center text-lg-start">
+              <!-- Copyright -->
+              <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.00);">          
+                <p style="color: lightgray;">A fan site by Dave Glorbus, v{{ version |safe}}</p>
+              </div>
+              
+            </footer>
+        
+       </main>  
+        <script>
+            document.body.style.zoom="70%"    
+            if ('{{Level}}' != "")
+            {
+                document.getElementById('OppIVs').value = '{{OppIVs}}';
+                document.getElementById('set1').value = '{{set1}}';                
+                document.getElementById('set2').value = '{{set2}}';
+                document.getElementById('set3').value = '{{set3}}';
+                document.getElementById('set4').value = '{{set4}}';
+                document.getElementById('set5').value = '{{set5}}';
+                document.getElementById('set6').value = '{{set6}}';
+                document.getElementById('set1IVs').value = '{{set1IVs}}';                
+                document.getElementById('set2IVs').value = '{{set2IVs}}';
+                document.getElementById('set3IVs').value = '{{set3IVs}}';
+                document.getElementById('set4IVs').value = '{{set4IVs}}';
+                document.getElementById('set5IVs').value = '{{set5IVs}}';
+                document.getElementById('set6IVs').value = '{{set6IVs}}';
+                document.getElementById('Level').value = '{{Level}}';
+                document.getElementById('Round').value = '{{Round}}';              
+            }
+            else 
+            {
+              document.getElementById('set1IVs').value = '31';                
+              document.getElementById('set2IVs').value = '31';
+              document.getElementById('set3IVs').value = '31';
+              document.getElementById('set4IVs').value = '31';
+              document.getElementById('set5IVs').value = '31';
+              document.getElementById('set6IVs').value = '31';
+            }
+        </script>
+    </body>
+ </html>

@@ -4,16 +4,18 @@ import BattleFactoryBuddy.Move as Move
 import BattleFactoryBuddy.StaticHTMLHandler as StaticHTMLHandler
 import BattleFactoryBuddy.StaticMoveDataHandler as StaticMoveDataHandler
 import os
+import json
 
 
 class StaticDataHandler:
     # Loading and initialization of all static data used by the Buddy. This is loaded once and
     # is immutable over the lifetime of the app. Only exception are the team lists which are
     # loaded on demand to improve startup performance (but are also immutable).
-    version = "2.0.5"
+    version = "2.1.0"
 
     # Indexed by SetID (sequential numbers), contains Set objects.
     setDict = {}
+    setNameDict = {}
     
     # Indexed by Species name, contains Species objects.
     speciesDict = {}
@@ -28,6 +30,7 @@ class StaticDataHandler:
     teamLists = {}
     # Flat list of all sets (unordered)
     setList = []
+    setListNames = []
     # Whether we cache teams into memory or load from file for each query.
     cacheTeams = True
 
@@ -35,6 +38,9 @@ class StaticDataHandler:
     moveHtml = ""
     speciesHtml = ""
     itemHtml = ""    
+
+    #H2H dict
+    h2hDict = {} 
 
     # Pull all Set info. Add the sets to our set dict and create Species containers, adding to
     # those too.
@@ -52,7 +58,9 @@ class StaticDataHandler:
             # Add this set to the Species, does some further initialisation if this is the first time.
             speciesDict[speciesName].addSet(set)
             setDict[set.uid] = set
+            setNameDict[set.id] = set
             setList.append(set)
+            setListNames.append(set.id)
             for move in set.moveList:
                 StaticMoveDataHandler.StaticMoveDataHandler.addUsedMove(move)                
             
@@ -65,6 +73,7 @@ class StaticDataHandler:
     speciesHtml = StaticHTMLHandler.StaticHTMLHandler.createListHTMLfromList(speciesNameList)
     itemList.sort()
     itemHtml = StaticHTMLHandler.StaticHTMLHandler.createListHTMLfromList(itemList)
+    setHtml = StaticHTMLHandler.StaticHTMLHandler.createListHTMLfromList(setListNames)
 
     # Returns an unordered list of all Sets.
     @staticmethod
@@ -75,6 +84,13 @@ class StaticDataHandler:
     @staticmethod
     def getSetFromId(id):
         return StaticDataHandler.setDict[id]
+
+    # Returns a set matching a given ID.
+    @staticmethod
+    def getSetFromName(name):
+        if "10" in name:
+            name = name.replace("10","X")
+        return StaticDataHandler.setNameDict[name]
     
     # Returns a human readable ID (e.g. Blaziken-1) from a uid (e.g. 67)
     # Note that the method name is slightly ambiguous but is in keeping
@@ -146,6 +162,16 @@ class StaticDataHandler:
                 if cacheReady:
                     StaticDataHandler.teamLists[type][phrase].append(team)
     
+    # An iterable returning a h2h result each time for the set chosen
+    @staticmethod
+    def iterGetH2HResult(id,monIVs,oppIVs):
+        if id not in StaticDataHandler.h2hDict:
+            with open("./BattleFactoryBuddy/Data/"+id) as input:
+                for line in input:
+                    StaticDataHandler.h2hDict[id] = json.loads(line)            
+        for (oppSetId, result) in StaticDataHandler.h2hDict[id].items():
+            yield (oppSetId, result[monIVs + "s" + oppIVs + "s"])
+    
     @staticmethod
     def getMoveHTML():        
         return(StaticMoveDataHandler.StaticMoveDataHandler.getMoveHtml())        
@@ -161,6 +187,10 @@ class StaticDataHandler:
     @staticmethod
     def getVersion():
         return(StaticDataHandler.version)
+    
+    @staticmethod
+    def getSetHTML():
+        return(StaticDataHandler.setHtml)
         
 
                 

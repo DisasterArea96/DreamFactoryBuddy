@@ -5,6 +5,7 @@ import BattleFactoryBuddy.SetQueryHandler as SetQueryHandler
 import BattleFactoryBuddy.StaticDataHandler as StaticDataHandler
 import BattleFactoryBuddy.SpeedQueryHandler as SpeedQueryHandler
 import BattleFactoryBuddy.SwitchQueryHandler as SwitchQueryHandler
+import BattleFactoryBuddy.TeamBuilderQueryHandler as TeamBuilderQueryHandler
 from time import perf_counter
 
 # This is landing on the first page.
@@ -67,3 +68,20 @@ def switchincalc(request):
         context["pkmn"] = StaticDataHandler.StaticDataHandler.getSpeciesHTML()
         context["version"] = StaticDataHandler.StaticDataHandler.getVersion()        
         return render(request, 'BattleFactoryBuddy/switchincalc.html', context)
+
+# This is processing a request for switch-in logic
+@csrf_exempt
+def teambuilder(request):
+    if request.method == 'POST':        
+        context = request.POST.dict()    
+        teamBuilderQueryHandler =  TeamBuilderQueryHandler.TeamBuilderQueryHandler(context)  
+        context = teamBuilderQueryHandler.handleQuery()                                  
+        context["pkmn"] = StaticDataHandler.StaticDataHandler.getSetHTML()
+        context["version"] = StaticDataHandler.StaticDataHandler.getVersion() 
+        return render(request, 'BattleFactoryBuddy/teambuilder.html', context)
+    else:        
+        context = {}
+        context["pkmn"] = StaticDataHandler.StaticDataHandler.getSetHTML()
+        context["version"] = StaticDataHandler.StaticDataHandler.getVersion()                  
+        return render(request, 'BattleFactoryBuddy/teambuilder.html', context)
+        

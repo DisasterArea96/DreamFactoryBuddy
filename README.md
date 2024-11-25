@@ -11,6 +11,7 @@ Check out this <a href="https://youtu.be/kMAyGfeFTOw?si=pB4kvKfc3yH6U0Py">video 
 <a href="https://youtu.be/fw08PYYXvaA">Battle Factory Buddy Setup Guide<a>
 
 ## Quick Start - First time setup for running on your own PC.
+* Check you've got at least 400MB to spare on your hard disk. That's not a lot, but you'll be sad if you use it all.
 * Download this repository as a ZIP file (click the Green Code button) and extract it somewhere on your PC.
 * If you don't already have python. Go to <a href="https://www.python.org/downloads/">python.org<a> and download the latest version of python and install it (you'll probably want the Windows-64 bit installer when given a big list of things to download).
 * Open file explorer and double click on setup. It should run for a few minutes and is done when you see `Starting development server`. If you don't see that (likely a black window flashes up and closes) then try running setuppython instead, which does the same thing in a slightly different way.
@@ -28,3 +29,11 @@ However, this is a relatively run of the mill Django app, it should be very poss
 ## Editing
 See contributing.md for a bit about contributing to this project.
 If you want to make an alternative version for custom versions of the factory then search the codebase for ALTSETS for some pointers.
+
+## Acks / Shoutouts
+Big thanks to everyone in the Emerald Battle Facilities and Battle Factory communities. Specific thanks to:
+- LRXC for lighting the fire.
+- Donlyphans and Xavion for their incredible work pulling together Factory resources.
+- Turskain, Kaboissonneault and others who have maintained, hosted and contributed to forks of the damage calculator for facilities use.
+- Everyone in The Bergg discord for being awesome. Notably (but not limited to) BPark, Nnico, Wildcat, Goomer, Tinto, Magpie, Scraf, Sespe, DisasterArea (sorry if I've missed you off and shouldn't have!)
+- Roger Wrightshoe for providing all the data for the team builder by simulating a bajillion AI vs AI battles.

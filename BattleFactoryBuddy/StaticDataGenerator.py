@@ -1,5 +1,6 @@
 import BattleFactoryBuddy.StaticDataHandler as StaticDataHandler
 import BattleFactoryBuddy.Team as Team
+import json
 
 # Script to generate all static data (teams and speed tiers) and save them off in CSV files. This allows us to precompute all available teams
 # once and not have to do it per query (which would be prohibitively slow). These files are also large so aren't checked in
@@ -87,6 +88,25 @@ def validateSetInfo():
             print("Type mismatch on %s, saved off as %s and found as %s. \nFix allpkmn.csv and rerun."%(set.speciesName,typesdict[set.speciesName],set.types))
             exit()
 
+# Create inidividual matchup files out of the massive json checked-in.
+def generateH2Hfiles():
+    print("Generating H2H files for the team builder.")
+    with open("./BattleFactoryBuddy/InputData/combined_data_lv_100_20_battles.json") as input:
+        for line in input:
+            h2hDict = json.loads(line)
+            break    
+    for key in h2hDict:
+        with open("./BattleFactoryBuddy/Data/"+key,"w") as output:            
+            writestr = ""
+            newdict = {}
+            for key2 in h2hDict[key]:                
+                if key == key2:
+                    continue
+                newdict[key2] = h2hDict[key][key2]   
+                newdict[key2].pop("3s3n",None)
+            writestr = json.dumps(newdict)
+            output.write(writestr)
+            print("Written teambuilder info for " + key)            
 
 # UNUSED
 # ALTSETS - provide an updated battle_moves.h in this directory if you need to update the move data. This list is small enough
@@ -148,6 +168,7 @@ if __name__ == "__main__":
     print("This will take a while (maybe 5-10 mins?), it gets faster as it goes though!")
     validateSetInfo()    
     generateTeamList()
+    generateH2Hfiles()
     # Various utility functions that aren't needed to be run in most cases.
     # generateMoveList()
     # generateMoveCounts()
