@@ -16,6 +16,16 @@ class TeamResult():
         self.level = level
         self.round = round
         self.oppIVs = oppIVs
+        self.blockedsets = {}
+        if self.oppIVs != "3":
+            for oppSetId in self.teamSets:
+                self.blockedsets[oppSetId] = 1
+        else:
+            for oppSetId in self.teamSets:
+                i = 1
+                while i < 11:
+                    self.blockedsets[oppSetId.split("-")[0] + "-" + str(i)] = 1
+                    i += 1                
     
     def generateResults(self):
         level = self.level
@@ -37,9 +47,9 @@ class TeamResult():
         for teamSet in self.teamTuples:
             for (oppSetId, result) in StaticDataHandler.StaticDataHandler.iterGetH2HResult(*teamSet,self.oppIVs):
                 if str(StaticDataHandler.StaticDataHandler.getSetFromName(oppSetId).roundInfo) not in teamSetList:
-                    continue
-                if oppSetId in self.teamSets:
-                    continue
+                    continue                
+                if oppSetId in self.blockedsets:
+                    continue                    
                 if oppSetId not in self.winDict:
                     self.winDict[oppSetId] = 0                              
                 self.winDict[oppSetId] += result[0]
