@@ -11,7 +11,7 @@ class StaticDataHandler:
     # Loading and initialization of all static data used by the Buddy. This is loaded once and
     # is immutable over the lifetime of the app. Only exception are the team lists which are
     # loaded on demand to improve startup performance (but are also immutable).
-    version = "2.1.1"
+    version = "2.1.2"
 
     # Indexed by SetID (sequential numbers), contains Set objects.
     setDict = {}
@@ -165,6 +165,8 @@ class StaticDataHandler:
     # An iterable returning a h2h result each time for the set chosen
     @staticmethod
     def iterGetH2HResult(id,monIVs,oppIVs):
+        if id.split("-")[1] == "X":
+            id = id.split("-")[0] + "-10"
         if id not in StaticDataHandler.h2hDict:
             with open("./BattleFactoryBuddy/Data/"+id) as input:
                 for line in input:
