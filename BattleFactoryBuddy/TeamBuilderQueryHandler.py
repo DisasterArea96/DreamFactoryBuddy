@@ -137,7 +137,10 @@ class TeamBuilderQueryHandler():
             teamSets.append((self.inputdict[key],self.inputdict[key+"IVs"]))
         if len(teamSets) < 3:
             self.inputdict["output"] = "Not enough mons provided"
-            return(self.inputdict)        
+            return(self.inputdict)
+
+        swapMode = True if self.inputdict.get("SwapMode", "off") == "on" else False
+        currentTeam = teamSets[0:3]
 
         outputstr = ""
         minScore = 0
@@ -146,6 +149,11 @@ class TeamBuilderQueryHandler():
         possibleTeams = itertools.combinations(teamSets, 3)
 
         for teamTuples in possibleTeams:
+            # If using swap mode, pass over teams which don't contain
+            # two of the first three sets
+            if swapMode and (len(set(teamTuples) & set(currentTeam)) < 2):
+                continue
+
             tr = TeamResult(
                 teamTuples,
                 self.inputdict["OppIVs"],
