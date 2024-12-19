@@ -1,8 +1,10 @@
+import itertools
 import BattleFactoryBuddy.StaticDataHandler as StaticDataHandler
 
+
 class TeamResult():
-    def __init__(self,idiv1,idiv2,idiv3,oppIVs,level = "100", round="8"):
-        self.teamTuples= [idiv1,idiv2,idiv3]      
+    def __init__(self, teamTuples, oppIVs, level="100", round="8"):
+        self.teamTuples = teamTuples
         self.teamSets = []
         for tuple in self.teamTuples:
             self.teamSets.append(tuple[0])
@@ -141,27 +143,21 @@ class TeamBuilderQueryHandler():
         minScore = 0
         mintr = None
         trResultList = []
-        a = 0
-        b = 1
-        c = 2
-        while a < (len(teamSets)-2):
-            while b < (len(teamSets)-1):
-                while c < len(teamSets):
-                    if teamSets[a][0].split("-")[0] == teamSets[b][0].split("-")[0] or teamSets[c][0].split("-")[0] == teamSets[b][0].split("-")[0] or teamSets[c][0].split("-")[0] == teamSets[a][0].split("-")[0]:
-                        c+=1
-                        continue
-                    tr = TeamResult(teamSets[a],teamSets[b],teamSets[c],self.inputdict["OppIVs"],self.inputdict["Level"],self.inputdict["Round"])
-                    tr.generateResults()
-                    if (mintr == None) or (tr.getTeamScore() < minScore):
-                        mintr = tr
-                        minScore = mintr.getTeamScore()
-                    trResultList.append((tr.getTeamScore(),tr))
-                    c += 1
-                b += 1
-                c = b+1
-            a += 1
-            b = a+1
-            c = b+1
+        possibleTeams = itertools.combinations(teamSets, 3)
+
+        for teamTuples in possibleTeams:
+            tr = TeamResult(
+                teamTuples,
+                self.inputdict["OppIVs"],
+                self.inputdict["Level"],
+                self.inputdict["Round"],
+            )
+            tr.generateResults()
+            if (mintr == None) or (tr.getTeamScore() < minScore):
+                mintr = tr
+                minScore = mintr.getTeamScore()
+            trResultList.append((tr.getTeamScore(), tr))
+
         trResultList.sort(key=lambda tuple: tuple[0])
         outputstr += """<font size="2"><i> Please note, this is a fundamentally limited tool that looks only at the result of each of your sets doing 20 head-to-head matchups against each opposing set (so a team can have a max of 60 wins across all 3 mons). Use this as a resource to think about potential weaknesses but do not rely on it as any sort of source of truth. It also has no logic about team ordering, you're on your own for that.</i></font><br>"""
         outputstr += "Best team found: <b>{}</b><br><br>".format(trResultList[0][1].getSummary())        
