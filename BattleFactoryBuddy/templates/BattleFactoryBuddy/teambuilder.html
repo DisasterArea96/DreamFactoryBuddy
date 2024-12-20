@@ -55,7 +55,8 @@
                               <option value="31">31 IVs</option>                              
                             </select>      
                           </div>
-                          <div>Set 1</div>
+                          <h5 class="card-title" id="TeamHeader">Your Team</h5>
+                          <div class="set-title">Set 1</div>
                           <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
                             <select type="text" class="form-select" id="set1" name="set1" style="max-width: 256px;" placeholder="None" value="{{set1}}">                                
                                 <option value="" selected>None</option>
@@ -67,7 +68,7 @@
                               <option value="31">31 IVs</option>                              
                             </select>
                           </div>
-                          <div>Set 2</div>
+                          <div class="set-title">Set 2</div>
                           <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
                             <select type="text" class="form-select" id="set2" name="set2" style="max-width: 256px;" placeholder="None" value="{{set2}}">
                               <option value="" selected>None</option>
@@ -79,7 +80,7 @@
                               <option value="31">31 IVs</option>                              
                             </select>
                           </div>
-                          <div>Set 3</div>
+                          <div class="set-title">Set 3</div>
                           <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
                             <select type="text" class="form-select" id="set3" name="set3" style="max-width: 256px;" placeholder="None" value="{{set3}}">
                               <option value="" selected>None</option>
@@ -91,37 +92,38 @@
                               <option value="31">31 IVs</option>                              
                             </select>
                           </div>
-                          <div>Set 4</div>
+                          <h5 class="card-title" id="OpponentsHeader">Last Opponents</h5>
+                          <div class="set-title">Set 4</div>
                           <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
                             <select type="text" class="form-select" id="set4" name="set4" style="max-width: 256px;" placeholder="None" value="{{set4}}">
                               <option value="" selected>None</option>
                                 {{pkmn |safe}}
                             </select>
-                            <select type="text" class="form-select" id="set4IVs" name="set4IVs" style="max-width: 256px;">
+                            <select type="text" class="form-select opp-iv" id="set4IVs" name="set4IVs" style="max-width: 256px;">
                               <option value="3">3 IVs</option>
                               <option value="15">15 IVs</option>        
                               <option value="31">31 IVs</option>                              
                             </select>
                           </div>
-                          <div>Set 5</div>
+                          <div class="set-title">Set 5</div>
                           <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
                             <select type="text" class="form-select" id="set5" name="set5" style="max-width: 256px;" placeholder="None" value="{{set5}}">
                               <option value="" selected>None</option>
                                 {{pkmn |safe}}
                             </select>
-                            <select type="text" class="form-select" id="set5IVs" name="set5IVs" style="max-width: 256px;">
+                            <select type="text" class="form-select opp-iv" id="set5IVs" name="set5IVs" style="max-width: 256px;">
                               <option value="3">3 IVs</option>
                               <option value="15">15 IVs</option>        
                               <option value="31">31 IVs</option>                              
                             </select>
                           </div>
-                          <div>Set 6</div>
+                          <div class="set-title">Set 6</div>
                           <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
                             <select type="text" class="form-select" id="set6" name="set6" style="max-width: 256px;" placeholder="None" value="{{set6}}">
                               <option value="" selected>None</option>
                                 {{pkmn |safe}}
                             </select>              
-                            <select type="text" class="form-select" id="set6IVs" name="set6IVs" style="max-width: 256px;">
+                            <select type="text" class="form-select opp-iv" id="set6IVs" name="set6IVs" style="max-width: 256px;">
                               <option value="3">3 IVs</option>
                               <option value="15">15 IVs</option>        
                               <option value="31">31 IVs</option>                              
@@ -129,6 +131,12 @@
                                       </div>
                           
                         </div>
+                    </div>
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">Options</div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="SwapMode" name="SwapMode" style="margin-left:10px"
+                        onclick="showhideSwitch()">
+                      <label class="form-check-label" for="flexSwitchCheckDefault" style="margin-left:5px">Swap Mode</label>
                     </div>
                     <hr>
                     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1"><a href="/">Back to main Buddy</a></div>                    
@@ -151,6 +159,25 @@
         
        </main>  
         <script>
+            function showhideSwitch() {
+              if (document.getElementById('SwapMode').checked) {
+                document.getElementById('TeamHeader').hidden = false;
+                document.getElementById('OpponentsHeader').hidden = false;
+                for (let element of document.getElementsByClassName('set-title')) {
+                  element.hidden = true;
+                }
+                for (let element of document.getElementsByClassName('opp-iv')) {
+                  element.value = 3;
+                }
+              } else {
+                document.getElementById('TeamHeader').hidden = true;
+                document.getElementById('OpponentsHeader').hidden = true;
+                document.getElementsByClassName('set-title').hidden = false;
+                for (let element of document.getElementsByClassName('set-title')) {
+                  element.hidden = false;
+                }
+              }
+            }
             document.body.style.zoom="70%"    
             if ('{{Level}}' != "")
             {
@@ -168,7 +195,8 @@
                 document.getElementById('set5IVs').value = '{{set5IVs}}';
                 document.getElementById('set6IVs').value = '{{set6IVs}}';
                 document.getElementById('Level').value = '{{Level}}';
-                document.getElementById('Round').value = '{{Round}}';              
+                document.getElementById('Round').value = '{{Round}}';
+                if ('{{SwapMode}}' == "on"){document.getElementById('SwapMode').checked = true;}    
             }
             else 
             {
@@ -179,6 +207,7 @@
               document.getElementById('set5IVs').value = '31';
               document.getElementById('set6IVs').value = '31';
             }
+            showhideSwitch();
         </script>
     </body>
  </html>
