@@ -127,7 +127,7 @@ class StaticDataHandler:
     def populateCache():
         filenames = os.listdir("./BattleFactoryBuddy/Data")        
         for filename in filenames:
-            if "-" in filename:
+            if ".csv" in filename and "-" in filename:
                 type = filename.split("-")[0]
                 phrase = filename.split("-")[1].split(".")[0]
                 for team in StaticDataHandler.iterGetTeamList(type,phrase):
