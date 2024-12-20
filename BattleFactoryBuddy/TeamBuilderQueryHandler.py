@@ -187,7 +187,7 @@ class TeamBuilderQueryHandler():
                 exitingStr = "{} ({}IVs) ".format(*exitingMon)
                 arrivingStr = "{} ({}IVs) ".format(*arrivingMon)
                 swapString += (
-                    f"Best swap: <b>{exitingStr}</b> for <b>{arrivingStr}</b><br>"
+                    f"Best swap found: Old <b>{exitingStr}</b> -> New <b>{arrivingStr}</b><br>"
                 )
 
         outputstr += """<font size="2"><i> Please note, this is a fundamentally limited tool that looks only at the result of each of your sets doing 20 head-to-head matchups against each opposing set (so a team can have a max of 60 wins across all 3 mons). Use this as a resource to think about potential weaknesses but do not rely on it as any sort of source of truth. It also has no logic about team ordering, you're on your own for that.</i></font><br>"""
