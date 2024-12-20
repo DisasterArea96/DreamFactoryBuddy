@@ -167,8 +167,33 @@ class TeamBuilderQueryHandler():
             trResultList.append((tr.getTeamScore(), tr))
 
         trResultList.sort(key=lambda tuple: tuple[0])
+        topTeam = trResultList[0][1]
+
+        if swapMode:
+            swapString = ""
+            difference = set(topTeam.teamTuples).symmetric_difference(set(currentTeam))
+            if len(difference) == 0:
+                swapString += "No swaps found to improve the current team <br>"
+            else:
+                mon1 = difference.pop()
+                mon2 = difference.pop()
+                if (mon1) in currentTeam:
+                    exitingMon = mon1
+                    arrivingMon = mon2
+                else:
+                    arrivingMon = mon1
+                    exitingMon = mon2
+
+                exitingStr = "{} ({}IVs) ".format(*exitingMon)
+                arrivingStr = "{} ({}IVs) ".format(*arrivingMon)
+                swapString += (
+                    f"Best swap: <b>{exitingStr}</b> for <b>{arrivingStr}</b><br>"
+                )
+
         outputstr += """<font size="2"><i> Please note, this is a fundamentally limited tool that looks only at the result of each of your sets doing 20 head-to-head matchups against each opposing set (so a team can have a max of 60 wins across all 3 mons). Use this as a resource to think about potential weaknesses but do not rely on it as any sort of source of truth. It also has no logic about team ordering, you're on your own for that.</i></font><br>"""
-        outputstr += "Best team found: <b>{}</b><br><br>".format(trResultList[0][1].getSummary())        
+        if swapMode:
+            outputstr += swapString
+        outputstr += "Best team found: <b>{}</b><br><br>".format(topTeam.getSummary())        
         accordionContainer = """<div class="col" style="max-width:1200px"> 
                     <div class="accordion" id="accordionOne">{}                    
                     </div>
@@ -198,11 +223,3 @@ class TeamBuilderQueryHandler():
         outputstr += accordionContainer.format(sectionstr)
         self.inputdict["output"] = outputstr
         return(self.inputdict)
-
-
-    
-
-
-
-
-    
