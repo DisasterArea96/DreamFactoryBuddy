@@ -172,9 +172,7 @@ class TeamBuilderQueryHandler():
         if swapMode:
             swapString = ""
             difference = set(topTeam.teamTuples).symmetric_difference(set(currentTeam))
-            if len(difference) == 0:
-                swapString += "No swaps found to improve the current team <br>"
-            else:
+            if len(difference) == 2:
                 mon1 = difference.pop()
                 mon2 = difference.pop()
                 if (mon1) in currentTeam:
@@ -189,6 +187,8 @@ class TeamBuilderQueryHandler():
                 swapString += (
                     f"Best swap found: Old <b>{exitingStr}</b> -> New <b>{arrivingStr}</b><br>"
                 )
+            else:
+                swapString += "No swaps found to improve the current team <br>"
 
         outputstr += """<font size="2"><i> Please note, this is a fundamentally limited tool that looks only at the result of each of your sets doing 20 head-to-head matchups against each opposing set (so a team can have a max of 60 wins across all 3 mons). Use this as a resource to think about potential weaknesses but do not rely on it as any sort of source of truth. It also has no logic about team ordering, you're on your own for that.</i></font><br>"""
         if swapMode:
