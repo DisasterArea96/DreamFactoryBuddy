@@ -1,8 +1,10 @@
+import itertools
 import BattleFactoryBuddy.StaticDataHandler as StaticDataHandler
 
+
 class TeamResult():
-    def __init__(self,idiv1,idiv2,idiv3,oppIVs,level = "100", round="8"):
-        self.teamTuples= [idiv1,idiv2,idiv3]      
+    def __init__(self, teamTuples, oppIVs, level="100", round="8"):
+        self.teamTuples = teamTuples
         self.teamSets = []
         for tuple in self.teamTuples:
             self.teamSets.append(tuple[0])
@@ -135,36 +137,63 @@ class TeamBuilderQueryHandler():
             teamSets.append((self.inputdict[key],self.inputdict[key+"IVs"]))
         if len(teamSets) < 3:
             self.inputdict["output"] = "Not enough mons provided"
-            return(self.inputdict)        
+            return(self.inputdict)
+
+        swapMode = True if self.inputdict.get("SwapMode", "off") == "on" else False
+        currentTeam = teamSets[0:3]
 
         outputstr = ""
         minScore = 0
         mintr = None
         trResultList = []
-        a = 0
-        b = 1
-        c = 2
-        while a < (len(teamSets)-2):
-            while b < (len(teamSets)-1):
-                while c < len(teamSets):
-                    if teamSets[a][0].split("-")[0] == teamSets[b][0].split("-")[0] or teamSets[c][0].split("-")[0] == teamSets[b][0].split("-")[0] or teamSets[c][0].split("-")[0] == teamSets[a][0].split("-")[0]:
-                        c+=1
-                        continue
-                    tr = TeamResult(teamSets[a],teamSets[b],teamSets[c],self.inputdict["OppIVs"],self.inputdict["Level"],self.inputdict["Round"])
-                    tr.generateResults()
-                    if (mintr == None) or (tr.getTeamScore() < minScore):
-                        mintr = tr
-                        minScore = mintr.getTeamScore()
-                    trResultList.append((tr.getTeamScore(),tr))
-                    c += 1
-                b += 1
-                c = b+1
-            a += 1
-            b = a+1
-            c = b+1
+        possibleTeams = itertools.combinations(teamSets, 3)
+
+        for teamTuples in possibleTeams:
+            # If using swap mode, pass over teams which don't contain
+            # two of the first three sets
+            if swapMode and (len(set(teamTuples) & set(currentTeam)) < 2):
+                continue
+
+            tr = TeamResult(
+                teamTuples,
+                self.inputdict["OppIVs"],
+                self.inputdict["Level"],
+                self.inputdict["Round"],
+            )
+            tr.generateResults()
+            if (mintr == None) or (tr.getTeamScore() < minScore):
+                mintr = tr
+                minScore = mintr.getTeamScore()
+            trResultList.append((tr.getTeamScore(), tr))
+
         trResultList.sort(key=lambda tuple: tuple[0])
+        topTeam = trResultList[0][1]
+
+        if swapMode:
+            swapString = ""
+            difference = set(topTeam.teamTuples).symmetric_difference(set(currentTeam))
+            if len(difference) == 2:
+                mon1 = difference.pop()
+                mon2 = difference.pop()
+                if (mon1) in currentTeam:
+                    exitingMon = mon1
+                    arrivingMon = mon2
+                else:
+                    arrivingMon = mon1
+                    exitingMon = mon2
+
+                exitingStr = "{} ({}IVs) ".format(*exitingMon)
+                arrivingStr = "{} ({}IVs) ".format(*arrivingMon)
+                swapString += (
+                    f"Best swap found: Old <b>{exitingStr}</b> -> New <b>{arrivingStr}</b><br>"
+                )
+            else:
+                swapString += "No swaps found to improve the current team <br>"
+
         outputstr += """<font size="2"><i> Please note, this is a fundamentally limited tool that looks only at the result of each of your sets doing 20 head-to-head matchups against each opposing set (so a team can have a max of 60 wins across all 3 mons). Use this as a resource to think about potential weaknesses but do not rely on it as any sort of source of truth. It also has no logic about team ordering, you're on your own for that.</i></font><br>"""
-        outputstr += "Best team found: <b>{}</b><br><br>".format(trResultList[0][1].getSummary())        
+        if swapMode:
+            outputstr += swapString
+        outputstr += "Best team found: <b>{}</b><br><br>".format(topTeam.getSummary())        
         accordionContainer = """<div class="col" style="max-width:1200px"> 
                     <div class="accordion" id="accordionOne">{}                    
                     </div>
@@ -194,11 +223,3 @@ class TeamBuilderQueryHandler():
         outputstr += accordionContainer.format(sectionstr)
         self.inputdict["output"] = outputstr
         return(self.inputdict)
-
-
-    
-
-
-
-
-    
