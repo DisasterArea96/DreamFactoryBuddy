@@ -37,3 +37,4 @@ Big thanks to everyone in the Emerald Battle Facilities and Battle Factory commu
 - Turskain, Kaboissonneault and others who have maintained, hosted and contributed to forks of the damage calculator for facilities use.
 - Everyone in The Bergg discord for being awesome. Notably (but not limited to) BPark, Nnico, Wildcat, Goomer, Tinto, Magpie, Scraf, Sespe, DisasterArea (sorry if I've missed you off and shouldn't have!)
 - Roger Wrightshoe for providing all the data for the team builder by simulating a bajillion AI vs AI battles.
+- Will-jj for being the first contributor by adding swap-mode in the teambuilder
