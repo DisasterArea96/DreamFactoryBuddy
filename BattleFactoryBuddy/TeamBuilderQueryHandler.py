@@ -153,6 +153,11 @@ class TeamBuilderQueryHandler():
             # two of the first three sets
             if swapMode and (len(set(teamTuples) & set(currentTeam)) < 2):
                 continue
+            
+            # If we have 2 of the same species, don't allow a team with both. Impossible during the rounds
+            # but possible during the draft.
+            if len(set([teamTuples[0][0].split("-")[0],teamTuples[1][0].split("-")[0],teamTuples[2][0].split("-")[0]])) != 3:
+                continue           
 
             tr = TeamResult(
                 teamTuples,
