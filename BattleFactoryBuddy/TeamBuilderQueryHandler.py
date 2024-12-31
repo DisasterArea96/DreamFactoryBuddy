@@ -118,9 +118,15 @@ class TeamResult():
     def getTeamString(self):
         retstr = ""
         for teamtuple in self.teamTuples:
-            retstr += "{} ({}IVs), ".format(*teamtuple) 
+            retstr += f"{TeamResult.getIVString(teamtuple)}, "
         retstr = retstr[:-2]
         return(retstr)
+    
+    @staticmethod
+    def getIVString(monIVTuple):
+        return "{} ({} IVs)".format(*monIVTuple)
+
+
 
 class TeamBuilderQueryHandler():
     def __init__(self, inputdict):
@@ -187,8 +193,8 @@ class TeamBuilderQueryHandler():
                     arrivingMon = mon1
                     exitingMon = mon2
 
-                exitingStr = "{} ({}IVs) ".format(*exitingMon)
-                arrivingStr = "{} ({}IVs) ".format(*arrivingMon)
+                exitingStr = f"{TeamResult.getIVString(exitingMon)}"
+                arrivingStr = f"{TeamResult.getIVString(arrivingMon)}"
                 swapString += (
                     f"Best swap found: Old <b>{exitingStr}</b> -> New <b>{arrivingStr}</b><br>"
                 )
