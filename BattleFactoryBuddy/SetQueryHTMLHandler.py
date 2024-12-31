@@ -198,7 +198,7 @@ class SetQueryHTMLHandler:
     # Notes Section
     def populateNotes(self):
         if len(self.results.notes) > 0:
-            return self.topNotes.format(self.results.notes[0])
+            return self.topNotes.format("<br>".join(self.results.notes))
         else:
             return ""
 

@@ -51,10 +51,9 @@ class SetQueryHandler:
             )
             return (False, results)
         elif round in ["3", "6"] and ivs == "6":
-            results.addError(
-                "Error: Opponent type has not been entered as Noland but this is a Noland round."
+            results.addNote(
+                "Note: Opponent type has not been entered as Noland but this is a Noland round. If you're playing doubles you're fine, otherwise switch to Noland"
             )
-            return (False, results)
 
         # If it's Noland and there's no input mons, just return a reminder
         # that there's nothing to check.
