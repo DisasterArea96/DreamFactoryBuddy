@@ -61,7 +61,7 @@ def generateTeamList():
             with open ("./BattleFactoryBuddy/Data/"+str(a) + "-" + str(b) + ".csv","w") as o:
                 for teamStr in combodictcount[a][b]:
                     o.write(teamStr + "\n")
-                print("Written to ../Data/"+str(a) + "-" + str(b) + ".csv")
+                print("Written " + str(len(combodictcount[a][b])) + " teams to ../Data/"+str(a) + "-" + str(b) + ".csv")
 
 # A utility function for checking the data on set moves and their phrases is consistent.
 # As an example, the base spreadsheet for factory had Registeel-3 as 0 0 4 4 whereas Amnesia
