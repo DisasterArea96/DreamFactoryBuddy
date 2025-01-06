@@ -174,7 +174,7 @@ class SetQueryHTMLHandler:
         self.level = int(inputdict["Level"])
         self.ivs = int(inputdict["Battle"])
         if self.ivs == 15 and inputdict["Round"] in ("6", "8"):
-            self.ivs = 31
+            self.ivs = 31        
         self.noOdds = "NoOdds" in self.inputdict
         self.inputdict["outputhtml"] = self.populateTopContainer()
         return self.inputdict
@@ -282,9 +282,10 @@ class SetQueryHTMLHandler:
             else:
                 rowList = []
                 for probability, set in speciesResult.iterGetSets():
-                    rowList.append(
-                        set.getTooltipInfo(probability * speciesPercentage / 100)
-                    )
+                    if "HiRes" not in self.inputdict or self.inputdict["Species1"] == "":
+                        rowList.append(set.getTooltipInfo(probability * speciesPercentage / 100))
+                    else:
+                        rowList.append(set.getTooltipInfo(probability))                        
                 tooltip = "\n".join(rowList)
                 rows[idx].append(
                     self.shortTableRow.format(
@@ -329,8 +330,12 @@ class SetQueryHTMLHandler:
                 speciesResult,
                 speciesPercentage,
             ) in self.results.iterGetSortedFreeAgentSpeciesResults():
-                for probability, set in speciesResult.iterGetSets():
-                    setprob = probability * speciesPercentage / 100
+                for probability, set in speciesResult.iterGetSets():                    
+                    if "HiRes" not in self.inputdict or self.inputdict["Species1"] == "":
+                        setprob = probability * speciesPercentage / 100
+                    else:
+                        setprob = probability
+                        print(set.id,probability)
                     row = set.getTableRow(self.level, self.ivs, self.noOdds, setprob)
                     sortablerowlist.append((setprob,self.detailTableRow.format(*row)))
                     
