@@ -300,6 +300,7 @@ class SetCalcHandler:
         # CREATE RESULTS ARRAY
         resultArray = {}    
         resultArray["total"] = 0
+        noland = inputdict["Battle"] = "31"
 
         # Allowed round markers
         checkround = False
@@ -416,9 +417,10 @@ class SetCalcHandler:
                         continue
                     if inputdict["Species3"] != "" and setB.speciesName != inputdict["Species3"] and setC.speciesName != inputdict["Species3"]:
                         continue
-                    (teamType, teamStyle) = StaticTeamUtils.StaticTeamUtils.getTeamInfo(setA,setB,setC)                 
-                    if teamType != inputdict["Type"] or str(teamStyle) != inputdict["Phrase"]:
-                        continue
+                    if not noland:
+                        (teamType, teamStyle) = StaticTeamUtils.StaticTeamUtils.getTeamInfo(setA,setB,setC)                 
+                        if teamType != inputdict["Type"] or str(teamStyle) != inputdict["Phrase"]:
+                            continue
 
                     # Do switch logic. Note that it's way easier here. We'll get to the other order
                     # later so just think about what's in front of us.
