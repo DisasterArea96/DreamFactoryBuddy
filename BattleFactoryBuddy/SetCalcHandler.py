@@ -300,7 +300,7 @@ class SetCalcHandler:
         # CREATE RESULTS ARRAY
         resultArray = {}    
         resultArray["total"] = 0
-        noland = inputdict["Battle"] = "31"
+        noland = inputdict["Battle"] == "31"
 
         # Allowed round markers
         checkround = False
