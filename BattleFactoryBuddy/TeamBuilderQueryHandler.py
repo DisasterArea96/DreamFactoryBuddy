@@ -126,17 +126,30 @@ class TeamResult():
     def getIVString(monIVTuple):
         return "{} ({} IVs)".format(*monIVTuple)
 
-
-
 class TeamBuilderQueryHandler():
     def __init__(self, inputdict):
         self.inputdict = inputdict        
 
     def handleQuery(self):
+        try:
+            return(self.handleQueryInternal())
+        except Exception:
+            self.inputdict["output"] = "Teambuilder hit an error - please check you've entered possible sets and IVs for your current round"
+            return(self.inputdict)
+    
+    def handleQueryInternal(self):
         if self.inputdict["Level"] == "50" and self.inputdict["Round"] in ["1","2","3"]:
             self.inputdict["output"] = "Sorry - level 50 rounds 1 - 3 aren't supported yet."
             return(self.inputdict)
         teamSets = []
+        round = self.inputdict["Round"]
+        oppIVs = self.inputdict["OppIVs"]  
+        if oppIVs == "15" and round in ["1","2","4","5"]:
+            self.inputdict["output"] = "Not a Noland round"
+            return(self.inputdict)
+        if oppIVs == "15" and round >= "6":
+            oppIVs = "31"            
+        
         for key in ["set1","set2","set3","set4","set5","set6"]:
             if self.inputdict[key] == "":
                 continue
@@ -167,9 +180,9 @@ class TeamBuilderQueryHandler():
 
             tr = TeamResult(
                 teamTuples,
-                self.inputdict["OppIVs"],
+                oppIVs,
                 self.inputdict["Level"],
-                self.inputdict["Round"],
+                round,
             )
             tr.generateResults()
             if (mintr == None) or (tr.getTeamScore() < minScore):
