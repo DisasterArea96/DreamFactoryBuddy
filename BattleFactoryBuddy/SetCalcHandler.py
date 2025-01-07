@@ -8,10 +8,10 @@ class SetCalcHandler:
         return
 
     def calculate(self, inputdict, results):
-        if inputdict["Battle"] == "15":
-            return self.calculateNolandBattle(inputdict, results)
-        elif "HiRes" in inputdict and inputdict["Species1"] != None:
+        if "HiRes" in inputdict and inputdict["Species1"] != None:
             return self.calcProcedural(inputdict,results)
+        elif inputdict["Battle"] == "15":
+            return self.calculateNolandBattle(inputdict, results)
         else:
             return self.calculateStandardBattle(inputdict, results)
 
@@ -300,7 +300,7 @@ class SetCalcHandler:
         # CREATE RESULTS ARRAY
         resultArray = {}    
         resultArray["total"] = 0
-        noland = inputdict["Battle"] == "31"
+        noland = inputdict["Battle"] == "15"
 
         # Allowed round markers
         checkround = False
