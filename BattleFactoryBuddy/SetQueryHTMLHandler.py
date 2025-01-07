@@ -250,7 +250,7 @@ class SetQueryHTMLHandler:
         ):
             return ""
         # If it's a Noland battle we don't need the concertinas.
-        elif self.inputdict["Battle"] == "15":
+        elif self.inputdict["Battle"] == "15" and "HiRes" not in self.inputdict:
             return ""
         elif "NoOdds" in self.inputdict or "setleveldetail" in self.inputdict:
             return self.populateSingleConcertina()
