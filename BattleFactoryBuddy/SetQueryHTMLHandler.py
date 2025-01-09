@@ -334,8 +334,7 @@ class SetQueryHTMLHandler:
                     if "HiRes" not in self.inputdict or self.inputdict["Species1"] == "":
                         setprob = probability * speciesPercentage / 100
                     else:
-                        setprob = probability
-                        print(set.id,probability)
+                        setprob = probability                        
                     row = set.getTableRow(self.level, self.ivs, self.noOdds, setprob)
                     sortablerowlist.append((setprob,self.detailTableRow.format(*row)))
                     
