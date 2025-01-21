@@ -179,7 +179,7 @@
                   <label class="form-check-label" for="flexSwitchCheckDefault" style = "margin-left:5px"> Show sets in back</label>
                 </div>
                 <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="HiRes" name="HiRes" style="margin-left:10px">
+                  <input class="form-check-input" type="checkbox" id="HiRes" checked="true" name="HiRes" style="margin-left:10px">
                   <label class="form-check-label" for="flexSwitchCheckDefault" style = "margin-left:5px"> High-resolution mode (slow)</label>
                 </div>                
                 <div class="d-grid gap-2">
@@ -663,7 +663,7 @@
         document.getElementById('Set3').value = '{{Set3}}';     
         convertFromGet("Set3");                
         if ('{{setleveldetail}}' == "on"){document.getElementById('setleveldetail').checked = true}
-        if ('{{HiRes}}' == "on"){document.getElementById('HiRes').checked = true}
+        if ('{{HiRes}}' == "off" || '{{HiRes}}' == ""){document.getElementById('HiRes').checked = false}
 
       }
 
