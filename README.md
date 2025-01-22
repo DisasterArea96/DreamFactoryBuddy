@@ -8,9 +8,9 @@ The player is given some very cryptic information before each battle, using that
 Check out this <a href="https://youtu.be/kMAyGfeFTOw?si=pB4kvKfc3yH6U0Py">video guide by LRXC</a> if you'd like to learn more about the factory.
 
 ## Hosted Version
-The Battle Factory Buddy is currently hosted at <a href="https://battlefactorybuddy.azurewebsites.net">https://battlefactorybuddy.azurewebsites.net</a>
+The Battle Factory Buddy is currently hosted at <a href="https://battlefactorybuddy.com/">https://battlefactorybuddy.com/</a>
 
-It's expected that this will be taken down / moved at some point soon.
+After a recent move, it's expected that this will be around for a while.
 
 ## Quickest Start - Video guide on setup
 <a href="https://youtu.be/fw08PYYXvaA">Battle Factory Buddy Setup Guide<a>
