@@ -46,15 +46,18 @@ class StaticMoveDataHandler:
         return StaticMoveDataHandler.moveDict[rationalisedName]
 
     @staticmethod
-    def applyTypeLogic(basenumber, typesapplying, typesappliedto, doubletypes=False,dropoutbeforeghostimms=True):
+    def applyTypeLogic(basenumber, typesapplyingin, typesappliedto, doubletypes=False,dropoutbeforeghostimms=True):
     # TODO
     # Something about levitate in here? But is it capping retval = basenumber if
     # target has levitate? Or not letting it 2x up at all? Think I did this somewhere?
         retval = basenumber
-        if not isinstance(typesapplying, list):
-            typesapplying = [typesapplying]
+        typesapplying = []
+        if not isinstance(typesapplyingin, list):
+            typesapplying = [typesapplyingin]
             if doubletypes:
                 typesapplying.append(typesapplying[0])
+        else:
+                typesapplying = typesapplyingin.copy()
         if not isinstance(typesappliedto,list):
             typesappliedto = [typesappliedto]        
         if len(typesapplying) == 1 and doubletypes:
