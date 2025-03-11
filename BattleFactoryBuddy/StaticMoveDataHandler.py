@@ -47,9 +47,7 @@ class StaticMoveDataHandler:
 
     @staticmethod
     def applyTypeLogic(basenumber, typesapplyingin, typesappliedto, doubletypes=False,dropoutbeforeghostimms=True):
-    # TODO
-    # Something about levitate in here? But is it capping retval = basenumber if
-    # target has levitate? Or not letting it 2x up at all? Think I did this somewhere?
+    # Calling code has to account for Levitate and Ground interaction on switchin
         retval = basenumber
         typesapplying = []
         if not isinstance(typesapplyingin, list):

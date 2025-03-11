@@ -11,6 +11,10 @@ class SwitchQueryHandler:
         htmlHandler = SwitchQueryHTMLHandler.SwitchQueryHTMLHandler()
         species1Name = self.inputdict["candidatemon1"]
         species2Name = self.inputdict["candidatemon2"]
+        if "magicnumber" in self.inputdict:
+            magicNumber = self.inputdict["magicnumber"]
+        else:
+            magicNumber = 39
         faintedSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(self.inputdict["faintedmon"])
         targetSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(self.inputdict["targetmon"])
         

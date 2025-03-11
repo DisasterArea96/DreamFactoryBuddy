@@ -162,7 +162,8 @@ class Set:
                         moveval = int(moveval * 1.5)
                 # AI switch-in doc says this shouldn't care about ghost imms, in
                 # practice that doesn't seem to be true.
-                moveval = StaticMoveDataHandler.StaticMoveDataHandler.applyTypeLogic(
+                if not ((move.type.lower() == "ground") and ("Levitate" in targetSpecies.abilities)):
+                    moveval = StaticMoveDataHandler.StaticMoveDataHandler.applyTypeLogic(
                     moveval, move.type, targetSpecies.types, dropoutbeforeghostimms=False
                 )
                 if moveval > 256:

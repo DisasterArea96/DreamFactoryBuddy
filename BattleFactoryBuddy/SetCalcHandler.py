@@ -4,6 +4,9 @@ import BattleFactoryBuddy.StaticTeamUtils as StaticTeamUtils
 from pathlib import Path
 
 class SetCalcHandler:
+    gengarWarning = "<b>The switch-in logic has lots of weird edge cases when you have a Ground/Poison mon with Levitate. The result should be correct, but remove Gengar from the switch logic box if you want to make sure you don't miss anything.</b>"
+    boomWarning = "<b>If the first enemy pokemon fainted using Explosion, then it's quite possible to trigger some strange behaviour with the switch AI. Read the \"Magic Number\" section or remove your switch target to skip the processing.</b>"
+
     def __init__(self):
         return
 
@@ -94,9 +97,17 @@ class SetCalcHandler:
             faintedSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(
                 inputdict["Species1"]
             )
+
+            for deadSetName in requiredDictsList[0]:
+                deadSet = StaticDataHandler.StaticDataHandler.getSetFromId(deadSetName)
+                if "Explosion" in deadSet.moveList:
+                    results.addNote(SetCalcHandler.boomWarning)
+                    break
             targetSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(
                 inputdict["targetmon"]
             )
+            if inputdict["targetmon"] == "Gengar":
+                results.addNote(SetCalcHandler.gengarWarning)
             resultNote = "Calculating assuming {} switched in when {} KO'd {}".format(
                 inputdict["Species2"], inputdict["targetmon"], inputdict["Species1"]
             )
@@ -192,6 +203,17 @@ class SetCalcHandler:
     # switch logic if its applicable.
     # NOTE: We don't get here if we don't have at least one species defined, that's handled in validation.
     def calculateNolandBattle(self, inputdict, results):
+        # If this is round 6 L50 or round 3 OL then Noland is limited to set 3 mons. Work that out so
+        # we can filter to only the ones that are possible.
+        overrideSetTo3 = False
+        if inputdict["Level"] == "50" and inputdict["Round"] == "6":
+            overrideSetTo3 = True
+        elif inputdict["Level"] == "100" and inputdict["Round"] == "3":
+            overrideSetTo3 = True
+
+        # Get all the possible sets we've seen from Noland.
+        requiredListList = self.generateListOfDictsOfRequiredSets(inputdict, overrideSetTo3=overrideSetTo3)
+
         switchin = False
         if (
             "targetmon" in inputdict
@@ -207,9 +229,17 @@ class SetCalcHandler:
             faintedSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(
                 inputdict["Species1"]
             )
+            for deadSetName in requiredListList[0]:
+                deadSet = StaticDataHandler.StaticDataHandler.getSetFromId(deadSetName)
+                if "Explosion" in deadSet.moveList:
+                    results.addNote(SetCalcHandler.boomWarning)
+                    break
+            
             targetSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(
                 inputdict["targetmon"]
             )
+            if inputdict["targetmon"] == "Gengar":
+                results.addNote(SetCalcHandler.gengarWarning)
             resultNote = "Calculating assuming {} switched in when {} KO'd {}".format(
                 inputdict["Species2"], inputdict["targetmon"], inputdict["Species1"]
             )
@@ -219,16 +249,6 @@ class SetCalcHandler:
                 )
             results.addNote(resultNote)
 
-        # If this is round 6 L50 or round 3 OL then Noland is limited to set 3 mons. Work that out so
-        # we can filter to only the ones that are possible.
-        overrideSetTo3 = False
-        if inputdict["Level"] == "50" and inputdict["Round"] == "6":
-            overrideSetTo3 = True
-        elif inputdict["Level"] == "100" and inputdict["Round"] == "3":
-            overrideSetTo3 = True
-
-        # Get all the possible sets we've seen from Noland.
-        requiredListList = self.generateListOfDictsOfRequiredSets(inputdict, overrideSetTo3=overrideSetTo3)
 
         # If we've not got anything species specified then the query handler will have returned an error.
 
@@ -379,11 +399,18 @@ class SetCalcHandler:
             switchlogic = True
             switchScoreDict = {}
             faintedSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(
-                inputdict["Species1"]
+                inputdict["Species1"]                
             )
             targetSpecies = StaticDataHandler.StaticDataHandler.getSpeciesFromName(
                 inputdict["targetmon"]
             )
+            for deadSet in firstSetList:
+                if "Explosion" in deadSet.moveList:
+                    results.addNote(SetCalcHandler.boomWarning)
+                    break
+
+            if inputdict["targetmon"] == "Gengar":
+                results.addNote(SetCalcHandler.gengarWarning)
             resultNote = "Calculating assuming {} switched in when {} KO'd {}".format(
                 inputdict["Species2"], inputdict["targetmon"], inputdict["Species1"]
             )
@@ -405,7 +432,7 @@ class SetCalcHandler:
                     switchScoreDict[switchScoreSet.id] = switchScoreSet.getSwitchScores(faintedSpecies,targetSpecies,inputdict["magicnumber"])                    
 
             results.addNote(resultNote)
-            
+         
 
 
         # DO THE THING
