@@ -9,7 +9,11 @@ Check out this <a href="https://youtu.be/kMAyGfeFTOw?si=pB4kvKfc3yH6U0Py">video 
 
 This is a fork of the Battle Factory Buddy by DaveGlorbus, which is intended to work with the romhack Dream Factory, rather than the original Battle Factory. The GitHub Repo for Dream Factory can be found <a href="https://github.com/DisasterArea96/pokeemerald_dreamfactory">here</a>.
 
+## Quickest Start - Video guide on setup
+<a href="https://youtu.be/fw08PYYXvaA">Battle Factory Buddy Setup Guide<a>
+
 ## Quick Start - First time setup for running on your own PC.
+* Check you've got at least 400MB to spare on your hard disk. That's not a lot, but you'll be sad if you use it all.
 * Download this repository as a ZIP file (click the Green Code button) and extract it somewhere on your PC.
 * If you don't already have python. Go to <a href="https://www.python.org/downloads/">python.org<a> and download the latest version of python and install it (you'll probably want the Windows-64 bit installer when given a big list of things to download).
 * Open file explorer and double click on setup. It should run for a few minutes and is done when you see `Starting development server`. If you don't see that (likely a black window flashes up and closes) then try running setuppython instead, which does the same thing in a slightly different way.
@@ -25,4 +29,4 @@ I only know how to do this in Azure, where the app needs a fairly beefy (like $4
 However, this is a relatively run of the mill Django app, it should be very possible to host it elsewhere.
 
 ## Editing
-See contributing.md for a bit about contributing to this project.
+See contributing.md for a bit about contributing to this project

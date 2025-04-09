@@ -5,6 +5,7 @@ class Species:
         self.setList = [] 
         self.fullyInit = False       
         self.types = []
+        self.IDs = []
     
     # Add a set to this species during initialisation.
     def addSet(self, set):    
@@ -13,11 +14,12 @@ class Species:
             self.abilities = set.getAbilities()
             self.fullyInit = True    
         self.setList.append(set)
+        self.IDs.append(set.uid)
     
     # Return a list of Set.uids matching those filtered. Up to the calling code to handle
     # the case where there aren't any.
     # NOTE REMOVED AN ITEMOUT FIELD FROM THIS DEFINITION.
-    def filter(self, movesin=[], itemin=[], ids=[]):
+    def filter(self, movesin=[], itemin=[], ids=[],returnSets = False):
         retlist = []        
         for set in self.setList:
             satisfied = True         
@@ -38,8 +40,17 @@ class Species:
                 if item != set.item:                     
                     satisfied = False
             if satisfied:
-                retlist.append(set.uid)
+                if returnSets:
+                    retlist.append(set)                
+                else:
+                    retlist.append(set.uid)
         
         if len(retlist) == 0:
             print("Returned no sets for " + self.speciesName + ", likely error on input")        
         return(retlist)
+    
+    # Just get the list of IDs.
+    def getIDs(self):
+        return(self.IDs)
+
+

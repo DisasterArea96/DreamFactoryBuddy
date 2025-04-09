@@ -7,16 +7,12 @@ class Results:
         self.confirmedOpponentSetsDict = {}
         self.confirmedOpponentSpeciesNameList = []
         self.freeAgentSetsDict = {}
-        self.inputdict = inputdict
-        self.detailMode = "DetailMode" in inputdict
-        self.probabilitySort = ("NoOdds" in inputdict) or (
-            "ProbabilitySort" in inputdict
-        )
-        self.noOdds = "NoOdds" in inputdict
+        self.inputdict = inputdict        
         self.validTeamAdded = False
         self.notes = []
         self.errorNotes = []
         self.teamsAdded = 0
+        self.hiRes = "HiRes" in inputdict and inputdict["Species1"] != ""
 
         # Set up for the Mons on the opposing team and defined by the user. We always want the detailed mode on this, they must be on each team and we're interested
         # in maintaining order so the user doesn't see their third mon on top.
@@ -68,14 +64,14 @@ class Results:
         for speciesName, speciesResult in self.freeAgentSetsDict.items():
             freeAgentList.append((speciesName, speciesResult))
         # Sort
-        if self.noOdds:
-            freeAgentList.sort(key=lambda tuple: tuple[0])
-        else:
-            freeAgentList.sort(key=lambda tuple: tuple[1].getSortKey(), reverse=True)
+        freeAgentList.sort(key=lambda tuple: tuple[1].getSortKey(), reverse=True)
 
         # Yield one SpeciesResult on the list at a time
         for speciesName, speciesResult in freeAgentList:
-            speciesPercentage = float(speciesResult.totalcount * 100 / self.teamsAdded)
+            if self.hiRes:
+                speciesPercentage = speciesResult.speciesPercentage
+            else:
+                speciesPercentage = float(speciesResult.totalcount * 100 / self.teamsAdded)
             yield (speciesResult, speciesPercentage)
         return
 
@@ -86,3 +82,34 @@ class Results:
     # Add a note to be rendered back the user.
     def addNote(self, noteString):
         self.notes.append(noteString)
+    
+    # Load in a list of results for Hi-def mode. The data here looks very different due to how
+    # it's generated but we want a consistent interface into the HTML builder, so here's where
+    # we handle the mess.
+    def loadHiResResults(self, resultList):
+        thisSpeciesName = ""
+        currentSpeciesName = ""
+        currentSpeciesList = []                
+        for setAndResult in resultList:
+            thisSpeciesName = setAndResult[0].speciesName
+            # First time through the loop
+            if currentSpeciesName == "":
+                currentSpeciesName = thisSpeciesName
+            if (thisSpeciesName != currentSpeciesName):                
+                if currentSpeciesName in self.confirmedOpponentSetsDict:
+                    self.confirmedOpponentSetsDict[currentSpeciesName].loadHiResResults(currentSpeciesList)                    
+                else:
+                    self.freeAgentSetsDict[currentSpeciesName] = SpeciesResult.SpeciesResult(currentSpeciesName, self.inputdict)
+                    self.freeAgentSetsDict[currentSpeciesName].loadHiResResults(currentSpeciesList)                    
+                currentSpeciesList = []
+                self.teamsAdded += 1                
+                currentSpeciesName = thisSpeciesName
+            currentSpeciesList.append(setAndResult)
+        
+        # Pick up the final set too
+        if currentSpeciesName in self.confirmedOpponentSetsDict:
+            self.confirmedOpponentSetsDict[currentSpeciesName].loadHiResResults(currentSpeciesList)            
+        else:
+            self.freeAgentSetsDict[currentSpeciesName] = SpeciesResult.SpeciesResult(currentSpeciesName, self.inputdict)
+            self.freeAgentSetsDict[currentSpeciesName].loadHiResResults(currentSpeciesList)        
+

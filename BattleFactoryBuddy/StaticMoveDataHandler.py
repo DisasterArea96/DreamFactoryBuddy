@@ -45,276 +45,256 @@ class StaticMoveDataHandler:
         rationalisedName = StaticMoveDataHandler.rationaliseMoveName(moveName)
         return StaticMoveDataHandler.moveDict[rationalisedName]
 
-    @staticmethod
-    def applyTypeLogic(basenumber, typesapplying, typesappliedto, doubletypes=False,dropoutbeforeghostimms=True):
-    # TODO
-    # Something about levitate in here? But is it capping retval = basenumber if
-    # target has levitate? Or not letting it 2x up at all? Think I did this somewhere?
-        retval = basenumber
-        if not isinstance(typesapplying, list):
-            typesapplying = [typesapplying]
-            if doubletypes:
-                typesapplying.append(typesapplying[0])
-        if not isinstance(typesappliedto,list):
-            typesappliedto = [typesappliedto]        
-        if len(typesapplying) == 1 and doubletypes:
-            typesapplying.append(typesapplying[0])
-        for type in typesapplying:
-            retval = StaticMoveDataHandler.typeCalc(type,typesappliedto,retval,dropoutbeforeghostimms)
-        return retval      
+    # This code isn't currently required, but it may be useful in the future when switching logic is updated in dream factory
 
-    @staticmethod
-    def typeCalc(intype, targettypes, invalue, dropoutbeforeghostimms):
-        retval = invalue              
-        temp = intype.upper()
-        intype = temp
-        temp = []
-        for a in targettypes:
-            temp.append(a.upper())
-        targettypes = temp
-        if intype == "NORMAL":
-                if "ROCK" in targettypes:
-                        retval = int(retval*0.5)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.5)
-        elif intype == "FIRE":
-                if "FIRE" in targettypes:
-                        retval = int(retval*0.5)
-                if "WATER" in targettypes:
-                        retval = int(retval*0.5)                        
-                if "GRASS" in targettypes:
-                        retval = int(retval*2.0)                        
-                if "ICE" in targettypes:
-                        retval = int(retval*2.0)
-                if "BUG" in targettypes:
-                        retval = int(retval*2.0)
-                if "ROCK" in targettypes:
-                        retval = int(retval*0.5)
-                if "DRAGON" in targettypes:
-                        retval = int(retval*0.5)
-                if "STEEL" in targettypes:
-                        retval = int(retval*2.0)
-        elif intype == "WATER":
-                if "FIRE" in targettypes:
-                        retval = int(retval*2.0)
-                if "WATER" in targettypes:
-                        retval = int(retval*0.5)
-                if "GRASS" in targettypes:
-                        retval = int(retval*0.5)
-                if "GROUND" in targettypes:
-                        retval = int(retval*2.0)
-                if "ROCK" in targettypes:
-                        retval = int(retval*2.0)
-                if "DRAGON" in targettypes:
-                        retval = int(retval*0.5)
-        elif intype == "ELECTRIC":
-                if "WATER" in targettypes:
-                        retval = int(retval*2.0)
-                if "ELECTRIC" in targettypes:
-                        retval = int(retval*0.5)
-                if "GRASS" in targettypes:
-                        retval = int(retval*0.5)
-                if "GROUND" in targettypes:
-                        retval = int(retval*0.0)
-                if "FLYING" in targettypes:
-                        retval = int(retval*2.0)
-                if "DRAGON" in targettypes:
-                        retval = int(retval*0.5)
-        elif intype == "GRASS":
-                if "FIRE" in targettypes:
-                        retval = int(retval*0.5)
-                if "WATER" in targettypes:
-                        retval = int(retval*2.0)
-                if "GRASS" in targettypes:
-                        retval = int(retval*0.5)
-                if "POISON" in targettypes:
-                        retval = int(retval*0.5)
-                if "GROUND" in targettypes:
-                        retval = int(retval*2.0)
-                if "FLYING" in targettypes:
-                        retval = int(retval*0.5)
-                if "BUG" in targettypes:
-                        retval = int(retval*0.5)
-                if "ROCK" in targettypes:
-                        retval = int(retval*2.0)
-                if "DRAGON" in targettypes:
-                        retval = int(retval*0.5)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.5)
-        elif intype == "ICE":
-                if "WATER" in targettypes:
-                        retval = int(retval*0.5)
-                if "GRASS" in targettypes:
-                        retval = int(retval*2.0)
-                if "ICE" in targettypes:
-                        retval = int(retval*0.5)
-                if "GROUND" in targettypes:
-                        retval = int(retval*2.0)
-                if "FLYING" in targettypes:
-                        retval = int(retval*2.0)
-                if "DRAGON" in targettypes:
-                        retval = int(retval*2.0)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.5)
-                if "FIRE" in targettypes:
-                        retval = int(retval*0.5)
-        elif intype == "FIGHTING":
-                if "NORMAL" in targettypes:
-                        retval = int(retval*2.0)
-                if "ICE" in targettypes:
-                        retval = int(retval*2.0)
-                if "POISON" in targettypes:
-                        retval = int(retval*0.5)
-                if "FLYING" in targettypes:
-                        retval = int(retval*0.5)
-                if "PSYCHIC" in targettypes:
-                        retval = int(retval*0.5)
-                if "BUG" in targettypes:
-                        retval = int(retval*0.5)
-                if "ROCK" in targettypes:
-                        retval = int(retval*2.0)
-                if "DARK" in targettypes:
-                        retval = int(retval*2.0)
-                if "STEEL" in targettypes:
-                        retval = int(retval*2.0)
-        elif intype == "POISON":
-                if "GRASS" in targettypes:
-                        retval = int(retval*2.0)
-                if "POISON" in targettypes:
-                        retval = int(retval*0.5)
-                if "GROUND" in targettypes:
-                        retval = int(retval*0.5)
-                if "ROCK" in targettypes:
-                        retval = int(retval*0.5)
-                if "GHOST" in targettypes:
-                        retval = int(retval*0.5)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.0)
-        elif intype == "GROUND":
-                if "FIRE" in targettypes:
-                        retval = int(retval*2.0)
-                if "ELECTRIC" in targettypes:
-                        retval = int(retval*2.0)
-                if "GRASS" in targettypes:
-                        retval = int(retval*0.5)
-                if "POISON" in targettypes:
-                        retval = int(retval*2.0)
-                if "FLYING" in targettypes:
-                        retval = int(retval*0.0)
-                if "BUG" in targettypes:                        
-                        retval = int(retval*0.5)
-                if "ROCK" in targettypes:
-                        retval = int(retval*2.0)
-                if "STEEL" in targettypes:
-                        retval = int(retval*2.0)
-        elif intype == "FLYING":
-                if "ELECTRIC" in targettypes:
-                        retval = int(retval*0.5)
-                if "GRASS" in targettypes:
-                        retval = int(retval*2.0)
-                if "FIGHTING" in targettypes:
-                        retval = int(retval*2.0)
-                if "BUG" in targettypes:
-                        retval = int(retval*2.0)
-                if "ROCK" in targettypes:
-                        retval = int(retval*0.5)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.5)
-        elif intype == "PSYCHIC":
-                if "FIGHTING" in targettypes:
-                        retval = int(retval*2.0)
-                if "POISON" in targettypes:
-                        retval = int(retval*2.0)
-                if "PSYCHIC" in targettypes:
-                        retval = int(retval*0.5)
-                if "DARK" in targettypes:
-                        retval = int(retval*0.0)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.5)
-        elif intype == "BUG":
-                if "FIRE" in targettypes:
-                        retval = int(retval*0.5)
-                if "GRASS" in targettypes:
-                        retval = int(retval*2.0)
-                if "FIGHTING" in targettypes:
-                        retval = int(retval*0.5)
-                if "POISON" in targettypes:
-                        retval = int(retval*0.5)
-                if "FLYING" in targettypes:
-                        retval = int(retval*0.5)
-                if "PSYCHIC" in targettypes:
-                        retval = int(retval*2.0)
-                if "GHOST" in targettypes:
-                        retval = int(retval*0.5)
-                if "DARK" in targettypes:
-                        retval = int(retval*2.0)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.5)
-        elif intype == "ROCK":
-                if "FIRE" in targettypes:
-                        retval = int(retval*2.0)
-                if "ICE" in targettypes:
-                        retval = int(retval*2.0)
-                if "FIGHTING" in targettypes:
-                        retval = int(retval*0.5)
-                if "GROUND" in targettypes:
-                        retval = int(retval*0.5)
-                if "FLYING" in targettypes:
-                        retval = int(retval*2.0)
-                if "BUG" in targettypes:
-                        retval = int(retval*2.0)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.5)
-        elif intype == "GHOST":
-                if "NORMAL" in targettypes:
-                        retval = int(retval*0.0)
-                if "PSYCHIC" in targettypes:
-                        retval = int(retval*2.0)
-                if "DARK" in targettypes:
-                        retval = int(retval*0.5)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.5)
-                if "GHOST" in targettypes:
-                        retval = int(retval*2.0)
-        elif intype == "DRAGON":
-                if "DRAGON" in targettypes:
-                        retval = int(retval*2.0)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.5)
-        elif intype == "DARK":
-                if "FIGHTING" in targettypes:
-                        retval = int(retval*0.5)
-                if "PSYCHIC" in targettypes:
-                        retval = int(retval*2.0)
-                if "GHOST" in targettypes:
-                        retval = int(retval*2.0)
-                if "DARK" in targettypes:
-                        retval = int(retval*0.5)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.5)
-        elif intype == "STEEL":
-                if "FIRE" in targettypes:
-                        retval = int(retval*0.5)
-                if "WATER" in targettypes:
-                        retval = int(retval*0.5)
-                if "ELECTRIC" in targettypes:
-                        retval = int(retval*0.5)
-                if "ICE" in targettypes:
-                        retval = int(retval*2.0)
-                if "ROCK" in targettypes:
-                        retval = int(retval*2.0)
-                if "STEEL" in targettypes:
-                        retval = int(retval*0.5)
-        if dropoutbeforeghostimms:               
-                return retval
-        if intype == "NORMAL":
-                if "GHOST" in targettypes:
-                        retval = int(retval*0.0)
-        elif intype == "FIGHTING":
-                if "GHOST" in targettypes:
-                        retval = int(retval*0.0)        
-        return retval
-
-
-
-        
+    # @staticmethod
+    # def typeCalc(intype, targettypes, invalue, dropoutbeforeghostimms):
+    #     retval = invalue
+    #     temp = intype.upper()
+    #     intype = temp
+    #     temp = []
+    #     for a in targettypes:
+    #         temp.append(a.upper())
+    #     targettypes = temp
+    #     if intype == "NORMAL":
+    #             if "ROCK" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     elif intype == "FIRE":
+    #             if "FIRE" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "WATER" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GRASS" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "ICE" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "BUG" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "ROCK" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "DRAGON" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*2.0)
+    #     elif intype == "WATER":
+    #             if "FIRE" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "WATER" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GRASS" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GROUND" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "ROCK" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "DRAGON" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     elif intype == "ELECTRIC":
+    #             if "WATER" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "ELECTRIC" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GRASS" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GROUND" in targettypes:
+    #                     retval = int(retval*0.0)
+    #             if "FLYING" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "DRAGON" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     elif intype == "GRASS":
+    #             if "FIRE" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "WATER" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "GRASS" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "POISON" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GROUND" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "FLYING" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "BUG" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "ROCK" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "DRAGON" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     elif intype == "ICE":
+    #             if "WATER" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GRASS" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "ICE" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GROUND" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "FLYING" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "DRAGON" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "FIRE" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     elif intype == "FIGHTING":
+    #             if "NORMAL" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "ICE" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "POISON" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "FLYING" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "PSYCHIC" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "BUG" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "ROCK" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "DARK" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*2.0)
+    #     elif intype == "POISON":
+    #             if "GRASS" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "POISON" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GROUND" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "ROCK" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GHOST" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.0)
+    #     elif intype == "GROUND":
+    #             if "FIRE" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "ELECTRIC" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "GRASS" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "POISON" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "FLYING" in targettypes:
+    #                     retval = int(retval*0.0)
+    #             if "BUG" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "ROCK" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*2.0)
+    #     elif intype == "FLYING":
+    #             if "ELECTRIC" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GRASS" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "FIGHTING" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "BUG" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "ROCK" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     elif intype == "PSYCHIC":
+    #             if "FIGHTING" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "POISON" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "PSYCHIC" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "DARK" in targettypes:
+    #                     retval = int(retval*0.0)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     elif intype == "BUG":
+    #             if "FIRE" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GRASS" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "FIGHTING" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "POISON" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "FLYING" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "PSYCHIC" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "GHOST" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "DARK" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     elif intype == "ROCK":
+    #             if "FIRE" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "ICE" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "FIGHTING" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GROUND" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "FLYING" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "BUG" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     elif intype == "GHOST":
+    #             if "NORMAL" in targettypes:
+    #                     retval = int(retval*0.0)
+    #             if "PSYCHIC" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "DARK" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "GHOST" in targettypes:
+    #                     retval = int(retval*2.0)
+    #     elif intype == "DRAGON":
+    #             if "DRAGON" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     elif intype == "DARK":
+    #             if "FIGHTING" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "PSYCHIC" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "GHOST" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "DARK" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     elif intype == "STEEL":
+    #             if "FIRE" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "WATER" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "ELECTRIC" in targettypes:
+    #                     retval = int(retval*0.5)
+    #             if "ICE" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "ROCK" in targettypes:
+    #                     retval = int(retval*2.0)
+    #             if "STEEL" in targettypes:
+    #                     retval = int(retval*0.5)
+    #     if dropoutbeforeghostimms:
+    #             return retval
+    #     if intype == "NORMAL":
+    #             if "GHOST" in targettypes:
+    #                     retval = int(retval*0.0)
+    #     elif intype == "FIGHTING":
+    #             if "GHOST" in targettypes:
+    #                     retval = int(retval*0.0)
+    #     return retval

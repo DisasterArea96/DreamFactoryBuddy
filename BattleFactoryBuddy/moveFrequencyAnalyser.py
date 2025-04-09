@@ -9,7 +9,7 @@ def calc(onLead):
     StaticDataHandler.StaticDataHandler.populateCache()
     movesToCheck = []
     for set in StaticDataHandler.StaticDataHandler.setList:
-        for move in set.movelist:
+        for move in set.moveList:
             if move not in movesToCheck:
                 movesToCheck.append(move)
     with open(filename, "w") as output:
@@ -35,7 +35,7 @@ def calc(onLead):
                                 set = StaticDataHandler.StaticDataHandler.getSetFromId(
                                     setid
                                 )
-                                for move in set.movelist:
+                                for move in set.moveList:
                                     if move == movetocheck:
                                         foundcount += 1
                                         break
@@ -46,7 +46,7 @@ def calc(onLead):
                                 set = StaticDataHandler.StaticDataHandler.getSetFromId(
                                     setid
                                 )
-                                teamMoves += set.movelist
+                                teamMoves += set.moveList
                             if movetocheck in teamMoves:
                                 foundcount += 1
                     line += "{:.5f}%,".format((float(foundcount) / checkedcount) * 100)

@@ -28,6 +28,9 @@ class SetQueryHandler:
             print(traceback.format_exc())
             results.addError("Battle Factory Buddy hit an error :(\n Please try again and / or report the issue.")
             self.inputdict = htmlHandler.buildHTML(self.inputdict, results)
+        if "CarryHiRes" in self.inputdict:
+            self.inputdict["HiRes"] = "on"
+            del self.inputdict["CarryHiRes"]
         return self.inputdict
 
     # Handles checking whether the query we've been given is valid. This mostly covers users inputting
@@ -46,10 +49,9 @@ class SetQueryHandler:
             )
             return (False, results)
         elif round in ["3", "6"] and oppivs == "7":
-            results.addError(
-                "Error: Opponent type has not been entered as Noland but this is a Noland round."
+            results.addNote(
+                "Note: Opponent type has not been entered as Noland but this is a Noland round. If you're playing doubles you're fine, otherwise switch to Noland"
             )
-            return (False, results)
 
         # If it's Noland and there's no input mons, just return a reminder
         # that there's nothing to check.
@@ -63,26 +65,24 @@ class SetQueryHandler:
                 results.addError("Noland Time! He can have any set you don't have.")
                 return (False, results)
 
-        # Check if any of the seen mons are mons we've said can't happen.
-        for seenSpeciesKey in SetQueryHandler.seenSpeciesKey:
-            if self.inputdict[seenSpeciesKey] != "":
-                for blockedSpeciesKey in SetQueryHandler.blockedSpeciesKey:
-                    if (
-                        self.inputdict[seenSpeciesKey]
-                        == self.inputdict[blockedSpeciesKey]
-                    ):
-                        results.addError(
-                            "Error: Opponent species %s is entered as being on your team or the last team."%(self.inputdict[seenSpeciesKey])
-                        )
-                        return (False, results)
+        # If it's not Noland, check if any of the seen mons are mons we've said can't happen.
+        if ivs != "11":
+            for seenSpeciesKey in SetQueryHandler.seenSpeciesKey:
+                if self.inputdict[seenSpeciesKey] != "":
+                    for blockedSpeciesKey in SetQueryHandler.blockedSpeciesKey:
+                        if (
+                            self.inputdict[seenSpeciesKey]
+                            == self.inputdict[blockedSpeciesKey]
+                        ):
+                            results.addError(
+                                "Error: Opponent species %s is entered as being on your team or the last team."%(self.inputdict[seenSpeciesKey])
+                            )
+                            return (False, results)
 
-        # If we've got Probability sort and NoOdds selected, deselect probability sort.
-        if "NoOdds" in self.inputdict and "ProbabilitySort" in self.inputdict:
-            self.inputdict.pop("ProbabilitySort")
-
-        # If we've got Detail Mode and NoOdds selected, deselect NoOdds.
-        if "NoOdds" in self.inputdict and "DetailMode" in self.inputdict:
-            self.inputdict.pop("DetailMode")
+        if "HiRes" in self.inputdict and self.inputdict["Species1"] == "":
+            results.addNote("Hi-Res mode only available once first mon is revealed, showing normal mode")
+            del self.inputdict["HiRes"]
+            self.inputdict["CarryHiRes"] = True
 
         # If we've got here then we've not found anything wrong. Return true and the (unedited) Results Object.
         return (True, results)

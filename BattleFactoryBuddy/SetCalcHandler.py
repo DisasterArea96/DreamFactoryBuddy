@@ -1,16 +1,20 @@
 import BattleFactoryBuddy.StaticDataHandler as StaticDataHandler
+import BattleFactoryBuddy.StaticTeamUtils as StaticTeamUtils
+from pathlib import Path
 
 class SetCalcHandler:
     def __init__(self):
         return
 
     def calculate(self, inputdict, results):
+        if "HiRes" in inputdict and inputdict["Species1"] != None:
+            return self.calcProcedural(inputdict,results)
         if inputdict["Battle"] == "11":
             return self.calculateNolandBattle(inputdict, results)
         else:
             return self.calculateStandardBattle(inputdict, results)
 
-    def generateListOfListsOfRequiredSets(self, inputdict,overrideSetTo3 = False):
+    def generateListOfDictsOfRequiredSets(self, inputdict,overrideSetTo3 = False):
         requiredListList = []
         idx = 1
         while idx <= 3:
@@ -28,31 +32,29 @@ class SetCalcHandler:
                     items.remove("")
                 ids = inputdict["Set" + str(idx)].split(",")
                 while "" in ids:
-                    ids.remove("")                    
-                requiredListList.append(
-                    StaticDataHandler.StaticDataHandler.getSpeciesFromName(
+                    ids.remove("")
+                requiredDict = {}
+                for id in StaticDataHandler.StaticDataHandler.getSpeciesFromName(
                         inputdict["Species" + str(idx)]
-                    ).filter(moves, items, ids if not overrideSetTo3 else ['3'])
-                )                
+                    ).filter(moves, items, ids if not overrideSetTo3 else ['3']):
+                    requiredDict[id] = 1
+                requiredListList.append(requiredDict)
             idx += 1
         return requiredListList
 
     def calculateStandardBattle(self, inputdict, results):
         # Get list of lists of required sets to be present in teams that are possible.
         # These are set IDs.
-        requiredListList = self.generateListOfListsOfRequiredSets(inputdict)
+        requiredDictsList = self.generateListOfDictsOfRequiredSets(inputdict)
 
-        # Get list of mons that aren't allowed - this is species string.
-        unallowedList = [
-            inputdict["Team1"],
-            inputdict["Team2"],
-            inputdict["Team3"],
-            inputdict["LastOpp1"],
-            inputdict["LastOpp2"],
-            inputdict["LastOpp3"],
-        ]
-        while "" in unallowedList:
-            unallowedList.remove("")
+        # Create a dict of setIDs that aren't allowed. This is all the sets of
+        # all species that are on the team or the last team (or draft)
+        unallowedDict = {}
+        for speciesName in (inputdict["Team1"],inputdict["Team2"],inputdict["Team3"],inputdict["LastOpp1"],inputdict["LastOpp2"],inputdict["LastOpp3"]):
+            if speciesName == "":
+                continue
+            for setID in StaticDataHandler.StaticDataHandler.getIDsFromSpeciesName(speciesName):
+                unallowedDict[setID] = 1
 
         # Create the list of team sets that are allowed, based on round and level.
         teamSetList = []
@@ -111,14 +113,14 @@ class SetCalcHandler:
                 continue
 
             # Check we've got one of each of the required mons
-            if len(requiredListList) > 0:
+            if len(requiredDictsList) > 0:
                 foundrequired = False
-                for requiredList in requiredListList:
+                for requiredDict in requiredDictsList:
                     foundrequired = False
                     for setId in requiredList:
                         if setId in team:
                             foundrequired = True
-                            break
+                            break                    
                     if not foundrequired:
                         break
                 # We can only leave the previous loop "happily" if we ended by find a suitable set match. Otherwise loop onto
@@ -129,10 +131,7 @@ class SetCalcHandler:
             # Check we don't have any of the mons we shouldn't have.
             foundDisallowed = False
             for setId in team:
-                speciesName = StaticDataHandler.StaticDataHandler.getSpeciesNameFromId(
-                    setId
-                )
-                if speciesName in unallowedList:
+                if setId in unallowedDict:
                     foundDisallowed = True
                     break
             if foundDisallowed:
@@ -224,3 +223,142 @@ class SetCalcHandler:
                                 else:
                                     results.addTeam((s1Id, s2Id, s3set.uid))
         return results
+    
+    def calcProcedural(self,inputdict,results):        
+        validOptionsFirst = len(StaticDataHandler.StaticDataHandler.getSetList())    
+        # CREATE RESULTS ARRAY
+        resultArray = {}    
+        resultArray["total"] = 0
+        noland = inputdict["Battle"] == "11"
+
+        # Allowed round markers
+        checkLevel = int(inputdict["Level"])
+        checkRound = int(inputdict["Round"])
+
+        if checkLevel == 50 and checkRound < 4:
+            markers = ["A"]
+        elif checkLevel == 50 and checkRound in [4,5,6]:
+            markers = ["B","C"]
+        elif (checkLevel == 50 and checkRound > 6) or (checkLevel == 100 and checkRound < 4):
+            markers = ["C","D"]
+        elif checkLevel == 100 and checkRound in [4,5,6]:
+            markers = ["D","E"]
+        elif checkLevel == 100 and checkRound > 6:
+            markers = ["D","E","F"]
+
+        # SET UP LIST OF MONS VALID FOR THESE TEAMS
+        blockedSpecies = [inputdict["Team1"],inputdict["Team2"],inputdict["Team3"],inputdict["LastOpp1"],inputdict["LastOpp2"],inputdict["LastOpp3"],inputdict["Species1"],inputdict["Species2"],inputdict["Species3"]]
+        while "" in blockedSpecies:
+            blockedSpecies.remove("")
+        setList = []
+        firstSetList = []
+
+        # Populate list with filtered sets for any Species defined.
+        idx = 1
+        while idx <= 3:
+            if inputdict["Species" + str(idx)] != "":
+                moves = [
+                    inputdict["Move1" + str(idx)],
+                    inputdict["Move2" + str(idx)],
+                    inputdict["Move3" + str(idx)],
+                    inputdict["Move4" + str(idx)],
+                ]
+                while "" in moves:
+                    moves.remove("")
+                items = [inputdict["Item" + str(idx)]]
+                while "" in items:
+                    items.remove("")
+                ids = inputdict["Set" + str(idx)].split(",")
+                while "" in ids:
+                    ids.remove("")            
+                for consideredSet in StaticDataHandler.StaticDataHandler.getSpeciesFromName(
+                        inputdict["Species" + str(idx)]
+                    ).filter(moves, items, ids, True):
+                    if not consideredSet.roundInfo in markers:
+                        resultArray[consideredSet.id] = 0        
+                        if idx == 1:
+                            firstSetList.append(consideredSet)
+                        else:
+                            setList.append(consideredSet)            
+            idx += 1
+
+        # Prep the setList for any mon not defined
+        for consideredSet in StaticDataHandler.StaticDataHandler.getSetList():
+            if consideredSet.roundInfo not in markers:
+                continue
+            if consideredSet.speciesName in blockedSpecies:
+                continue
+            resultArray[consideredSet.id] = 0        
+            setList.append(consideredSet)
+        if firstSetList == []:
+            firstSetList = setList
+        validOptionsFirst = len(firstSetList)    
+
+        # Prep switch logic
+        switchlogic = False
+        if (
+            "switchin" in inputdict
+            and inputdict["Species2"] != ""
+            and inputdict["Species1"] != ""
+        ):
+            switchlogic = True
+         
+        # DO THE THING
+        for setA in firstSetList:        
+            secondmonlist = []                
+            validOptionsSecond = 0
+            for setB in setList:            
+                if setA.compatibilitycheck(setB):
+                    validOptionsSecond += 1
+                    secondmonlist.append(setB)            
+            for setB in secondmonlist:                           
+                thirdmonlist = []
+                validOptionsThird = 0
+                for setC in setList:
+                    if setA.compatibilitycheck(setC) and setB.compatibilitycheck(setC):
+                        validOptionsThird += 1
+                        thirdmonlist.append(setC)                
+                for setC in thirdmonlist:
+                    # TEAM VALIDATION - cover species 2 and species 3 if they're here.
+                    if inputdict["Species2"] != "" and setB.speciesName != inputdict["Species2"] and setC.speciesName != inputdict["Species2"]:
+                        continue
+                    if inputdict["Species3"] != "" and setB.speciesName != inputdict["Species3"] and setC.speciesName != inputdict["Species3"]:
+                        continue
+                    if not noland:
+                        (teamType, teamStyle) = StaticTeamUtils.StaticTeamUtils.getTeamInfo(setA,setB,setC)                 
+                        if teamType != inputdict["Type"] or str(teamStyle) != inputdict["Phrase"]:
+                            continue
+
+                    # Do switch logic. Note that it's way easier here. We'll get to the other order
+                    # later so just think about what's in front of us.                    
+                    if switchlogic:
+                        if inputdict["ballnum"] == "2":
+                            if setB.speciesName != inputdict["Species2"]:
+                                continue
+                        elif inputdict["ballnum"] == "3":
+                            if setB.speciesName != inputdict["Species3"]:
+                                continue
+
+                        if setB.speciesName == inputdict["Species2"]:
+                            if setC.calcSpeed(inputdict) > setB.calcSpeed(inputdict):
+                                continue
+                        elif setC.speciesName == inputdict["Species2"]:
+                            if setB.calcSpeed(inputdict) >= setC.calcSpeed(inputdict):
+                                continue
+                        compoundProbability = 1/validOptionsFirst/validOptionsSecond/validOptionsThird
+                    else:
+                        compoundProbability = 1/validOptionsFirst/validOptionsSecond/validOptionsThird
+
+                    # TEAM RECORDING                    
+                    resultArray["total"] += compoundProbability                  
+                    resultArray[setA.id] += compoundProbability
+                    resultArray[setB.id] += compoundProbability
+                    resultArray[setC.id] += compoundProbability
+        resultList = []        
+        for setId in resultArray:
+            if setId == "total" or resultArray["total"] == 0 or resultArray[setId] == 0:
+                    continue
+            totalodds = 100*resultArray[setId]/resultArray["total"]                
+            resultList.append([StaticDataHandler.StaticDataHandler.getSetFromName(setId),totalodds])                    
+        results.loadHiResResults(resultList)        
+        return(results)

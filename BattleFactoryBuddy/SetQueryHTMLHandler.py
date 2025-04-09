@@ -24,6 +24,11 @@ class SetQueryHTMLHandler:
     # HTML stating that no matches are found. Takes no inputs.
     noMatches = '<font size="20"><b>No matches found, check inputs!</b></font><br>'
 
+    # HTML for a tooltip. Takes inputs:
+    # - The value that goes in the tooltip
+    # - The text that is hover overable
+    tooltip = """<a data-container="body" data-toggle="popover" html="true" width="500px" data-html="true" title="{}">{}</a>"""
+
     # HTML for the top Table on a successful result. Takes 2 inputs:
     # - Header for the column that is chance or phrase info.
     # - IV value for the Speed header
@@ -52,8 +57,8 @@ class SetQueryHTMLHandler:
     # HTML for the table rows in the top table. Takes a tuple output by Set.GetTableRow.
     detailTableRow = """<tr>     
       <td><b><a data-container="body" data-toggle="popover" html="true" width="500px" data-html="true" title="{}">{}</a></b></td>
-      <td><b>{}</b></td>      
-      <td>{}</td>
+      <td><b><a data-container="body" data-toggle="popover" html="true" width="500px" data-html="true" title="{}">{}</a></b></td>      
+      <td>{}</a></td>
       <td style="border-left: 1px solid LightGrey">{}</td>
       <td>{}</td>
       <td>{}</td>
@@ -157,11 +162,6 @@ class SetQueryHTMLHandler:
       <td>{}%</td>      
     </tr>"""
 
-    # HTML for a tooltip. Takes inputs:
-    # - The value that goes in the tooltip
-    # - The text that is hover overable
-    tooltip = """<a data-container="body" data-toggle="popover" html="true" width="500px" data-html="true" title="{}">{}</a>"""
-
     # Blank initialise. Inputdict can change between creation and needing to actually build anything so we leave it blank.
     def __init__(self):
         pass
@@ -173,7 +173,6 @@ class SetQueryHTMLHandler:
         self.results = results
         self.level = int(inputdict["Level"])
         self.ivs = int(inputdict["Battle"])
-        self.noOdds = "NoOdds" in self.inputdict
         self.inputdict["outputhtml"] = self.populateTopContainer()
         return self.inputdict
 
@@ -196,7 +195,7 @@ class SetQueryHTMLHandler:
     # Notes Section
     def populateNotes(self):
         if len(self.results.notes) > 0:
-            return self.topNotes.format(self.results.notes[0])
+            return self.topNotes.format("<br>".join(self.results.notes))
         else:
             return ""
 
@@ -212,7 +211,7 @@ class SetQueryHTMLHandler:
             and (self.inputdict["Species3"] == "")
         ):
             return ""
-        headerValue = "Phrase" if self.noOdds else "Chance"
+        headerValue = "Chance"
         speedIV = self.ivs
         rows = self.populateTopTableRows()
         return self.detailTable.format(headerValue, speedIV, rows)
@@ -226,11 +225,11 @@ class SetQueryHTMLHandler:
                 addDivider = True
             else:
                 rowList.append(
-                    self.detailTableRow.format("","", "", "", "", "", "", "", "", "", "")
+                    self.detailTableRow.format("","", "", "", "", "", "", "", "", "", "", "")
                 )
             # Populate each table row
             for probability, set in speciesResult.iterGetSets():
-                row = set.getTableRow(self.level, self.ivs, self.noOdds, probability)
+                row = set.getTableRow(self.level, self.ivs, probability)
                 rowList.append(self.detailTableRow.format(*row))
         return "".join(rowList)
 
@@ -248,9 +247,9 @@ class SetQueryHTMLHandler:
         ):
             return ""
         # If it's a Noland battle we don't need the concertinas.
-        elif self.inputdict["Battle"] == "11":
+        elif self.inputdict["Battle"] == "11" and "HiRes" not in self.inputdict:
             return ""
-        elif "NoOdds" in self.inputdict:
+        elif "setleveldetail" in self.inputdict:
             return self.populateSingleConcertina()
         else:
             return self.populateTripleConcertina()
@@ -271,25 +270,19 @@ class SetQueryHTMLHandler:
             else:
                 idx = 2
             counts[idx] += 1
-            if not "DetailMode" in self.inputdict:
-                rows[idx].append(
-                    self.shortTableRow.format(
-                        speciesResult.speciesName, "{:.2f}".format(speciesPercentage)
-                    )
+            rowList = []
+            for probability, set in speciesResult.iterGetSets():
+                if "HiRes" not in self.inputdict or self.inputdict["Species1"] == "":
+                    rowList.append(set.getTooltipInfo(probability * speciesPercentage / 100))
+                else:
+                    rowList.append(set.getTooltipInfo(probability))                        
+            tooltip = "\n".join(rowList)
+            rows[idx].append(
+                self.shortTableRow.format(
+                    self.tooltip.format(tooltip, speciesResult.speciesName),
+                    "{:.2f}".format(speciesPercentage),
                 )
-            else:
-                rowList = []
-                for probability, set in speciesResult.iterGetSets():
-                    rowList.append(
-                        set.getTooltipInfo(probability * speciesPercentage / 100)
-                    )
-                tooltip = "\n".join(rowList)
-                rows[idx].append(
-                    self.shortTableRow.format(
-                        self.tooltip.format(tooltip, speciesResult.speciesName),
-                        "{:.2f}".format(speciesPercentage),
-                    )
-                )
+            )
 
         # Work out which containers to show automatically. Current plan is that we show "Very likely"
         # if there's any entries and "Likely if there's fewer than 12".
@@ -321,15 +314,35 @@ class SetQueryHTMLHandler:
         rowlist = []
         rowcount = 0
         # Create the table to go in the concertina.
-        for (
-            speciesResult,
-            unusedVar1,
-        ) in self.results.iterGetSortedFreeAgentSpeciesResults():
-            for unusedvar2, set in speciesResult.iterGetSets():
-                row = set.getTableRow(self.level, self.ivs, self.noOdds, "")
-                rowlist.append(self.detailTableRow.format(*row))
-                rowcount += 1
-        table = self.detailTable.format("Phrase", speedIV, "".join(rowlist))
+        if "setleveldetail" in self.inputdict:
+            sortablerowlist = []
+            for (
+                speciesResult,
+                speciesPercentage,
+            ) in self.results.iterGetSortedFreeAgentSpeciesResults():
+                for probability, set in speciesResult.iterGetSets():                    
+                    if "HiRes" not in self.inputdict or self.inputdict["Species1"] == "":
+                        setprob = probability * speciesPercentage / 100
+                    else:
+                        setprob = probability                        
+                    row = set.getTableRow(self.level, self.ivs, setprob)
+                    sortablerowlist.append((setprob,self.detailTableRow.format(*row)))
+                    
+                    rowcount += 1
+            sortablerowlist.sort(key=lambda tuple: tuple[0], reverse=True)
+            for (probability, row) in sortablerowlist:
+                rowlist.append(row)        
+            table = self.detailTable.format("Odds", speedIV, "".join(rowlist))
+        else: 
+            for (
+                speciesResult,
+                unusedVar1,
+            ) in self.results.iterGetSortedFreeAgentSpeciesResults():
+                for unusedvar2, set in speciesResult.iterGetSets():
+                    row = set.getTableRow(self.level, self.ivs, "")
+                    rowlist.append(self.detailTableRow.format(*row))
+                    rowcount += 1
+            table = self.detailTable.format("Phrase", speedIV, "".join(rowlist))
 
         # Create the concertina, populating with the table and the count. We can assume there
         # are results here, as otherwise we would have just returned nothing from populateConcertina
