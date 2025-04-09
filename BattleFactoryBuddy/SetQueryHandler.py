@@ -66,7 +66,7 @@ class SetQueryHandler:
                 return (False, results)
 
         # If it's not Noland, check if any of the seen mons are mons we've said can't happen.
-        if ivs != "11":
+        if oppivs != "11":
             for seenSpeciesKey in SetQueryHandler.seenSpeciesKey:
                 if self.inputdict[seenSpeciesKey] != "":
                     for blockedSpeciesKey in SetQueryHandler.blockedSpeciesKey:

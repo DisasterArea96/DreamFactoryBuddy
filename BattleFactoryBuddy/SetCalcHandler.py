@@ -117,7 +117,7 @@ class SetCalcHandler:
                 foundrequired = False
                 for requiredDict in requiredDictsList:
                     foundrequired = False
-                    for setId in requiredList:
+                    for setId in requiredDict:
                         if setId in team:
                             foundrequired = True
                             break                    
