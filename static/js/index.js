@@ -13,7 +13,7 @@ function convertToPost(valstring) {
 
 function convertFromGet(valstring) {
     var checkboxes = document.getElementsByName(valstring.concat("check"))[0];
-    var selectedFromGet = Array.from(document.getElementById(valstring).value)
+    var selectedFromGet = document.getElementById(valstring).value.split(',')
     for (var j = 0; j < selectedFromGet.length; j++)
         for (var i = 0; i < checkboxes.options.length; i++) {
             if (selectedFromGet[j] == checkboxes.options[i].label) {
