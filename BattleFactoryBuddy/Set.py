@@ -13,7 +13,7 @@ class Set:
         # The human readable ID of the set e.g. "Skarmory-4"
         self.id = self.speciesName + "-" + attrList[3]
         # The set number within the species e.g. "4" for "Skarmory-4"
-        self.idno = int(attrList[3]) if attrList[3] != "X" else 10
+        self.idno = int(attrList[3])
         # The unique set number across all factory sets e.g. 392 for "Skarmory-4"
         self.uid = attrList[14]
         self.nature = attrList[4]
