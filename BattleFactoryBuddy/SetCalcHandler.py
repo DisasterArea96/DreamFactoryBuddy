@@ -270,16 +270,16 @@ class SetCalcHandler:
                     items.remove("")
                 ids = inputdict["Set" + str(idx)].split(",")
                 while "" in ids:
-                    ids.remove("")            
+                    ids.remove("")
                 for consideredSet in StaticDataHandler.StaticDataHandler.getSpeciesFromName(
                         inputdict["Species" + str(idx)]
                     ).filter(moves, items, ids, True):
-                    if not consideredSet.roundInfo in markers:
-                        resultArray[consideredSet.id] = 0        
+                    if consideredSet.roundInfo in markers:
+                        resultArray[consideredSet.id] = 0
                         if idx == 1:
                             firstSetList.append(consideredSet)
                         else:
-                            setList.append(consideredSet)            
+                            setList.append(consideredSet)
             idx += 1
 
         # Prep the setList for any mon not defined
@@ -302,20 +302,20 @@ class SetCalcHandler:
             and inputdict["Species1"] != ""
         ):
             switchlogic = True
-         
+
         # DO THE THING
         for setA in firstSetList:        
             secondmonlist = []                
             validOptionsSecond = 0
             for setB in setList:            
-                if setA.compatibilitycheck(setB):
+                if setA.compatibilitycheck_noroundcheck(setB):
                     validOptionsSecond += 1
                     secondmonlist.append(setB)            
             for setB in secondmonlist:                           
                 thirdmonlist = []
                 validOptionsThird = 0
                 for setC in setList:
-                    if setA.compatibilitycheck(setC) and setB.compatibilitycheck(setC):
+                    if setA.compatibilitycheck_noroundcheck(setC) and setB.compatibilitycheck_noroundcheck(setC):
                         validOptionsThird += 1
                         thirdmonlist.append(setC)                
                 for setC in thirdmonlist:

@@ -89,6 +89,13 @@ class Set:
                 return False
         return True
 
+    def compatibilitycheck_noroundcheck(self, otherpkmn):
+        if self.item == otherpkmn.item and self.item != "(no item)":
+            return False
+        if self.speciesName == otherpkmn.speciesName:
+            return False
+        return True
+
     def getSpeciesName(self):
         return self.speciesName
 
